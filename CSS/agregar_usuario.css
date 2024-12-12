@@ -1,0 +1,147 @@
+/* General */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}
+
+header nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+header nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+header nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Main Container */
+.main-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+input[type="text"], input[type="email"], input[type="password"], select {
+    padding: 10px;
+    margin: 8px 0 20px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, select:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* Submit Button */
+button[type="submit"] {
+    padding: 12px 20px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+button[type="submit"]:active {
+    background-color: #398439;
+}
+
+/* Error and Success Messages */
+.message {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+.message.success {
+    color: #4CAF50;
+    background-color: #e8f5e9;
+}
+
+.message.error {
+    color: #e74c3c;
+    background-color: #fbe3e4;
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+    .main-container {
+        margin: 20px;
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    label, input[type="text"], input[type="email"], input[type="password"], select {
+        font-size: 14px;
+    }
+
+    button[type="submit"] {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+}

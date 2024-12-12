@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión Escolar</title>
+    <link rel="stylesheet" href="/Escuela_sistema/css/style.css">
+    <link rel="stylesheet" href="css/gestion_usuarios.css">
+</head>
+<body>
+
+    <!-- Menú Superior -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#home">Inicio</a></li>
+                <li><a href="#about">Sobre Nosotros</a></li>
+                <li><a href="#contact">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <div class="main-container">
+        <div class="login-box">
+            <h2>Iniciar sesión</h2>
+            <form action="login.php" method="POST">
+                <label for="correo">Correo electrónico:</label>
+                <input type="email" name="correo" id="correo" required>
+                
+                <label for="contrasena">Contraseña:</label>
+                <input type="password" name="contrasena" id="contrasena" required>
+                
+                <button type="submit">Iniciar sesión</button>
+            </form>
+        </div>
+    </div>
+    
+
+</body>
+</html>

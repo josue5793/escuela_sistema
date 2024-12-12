@@ -1,0 +1,146 @@
+/* Estilo general de la página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Menú de navegación */
+header {
+    background-color: #333;
+    padding: 10px;
+    color: white;
+}
+
+header nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+header nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+header nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Contenedor principal */
+.main-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Título principal */
+h1 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Tabla de Alumnos */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Mensajes */
+.message {
+    text-align: center;
+    font-size: 18px;
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 4px;
+}
+
+.message.error {
+    background-color: #f44336; /* Rojo */
+}
+
+/* Formulario de agregar alumno */
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+form button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+/* Botón de eliminar alumno */
+.delete-btn {
+    background-color: #f44336; /* Rojo */
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.delete-btn:hover {
+    background-color: #e53935;
+}
