@@ -1,146 +1,93 @@
-/* Estilo general de la página */
-body {
+/* General Reset */
+body, h1, h2, p, button, input, textarea, select {
+    margin: 0;
+    padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Menú de navegación */
-header {
+/* Navbar */
+.navbar {
     background-color: #333;
-    padding: 10px;
-    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
 }
 
-header nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-}
-
-header nav ul li {
-    display: inline;
-    margin: 0 15px;
-}
-
-header nav ul li a {
-    color: white;
+.navbar a {
+    color: #fff;
     text-decoration: none;
-    font-weight: bold;
+    padding: 8px 15px;
 }
 
-header nav ul li a:hover {
-    text-decoration: underline;
+.navbar a:hover {
+    background-color: #575757;
+    border-radius: 5px;
 }
 
-/* Contenedor principal */
-.main-container {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 20px auto;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* Hero Section */
+.hero {
+    text-align: center;
+    background-color: #f8f8f8;
+    padding: 20px 0;
+    border-bottom: 2px solid #ccc;
 }
 
-/* Título principal */
-h1 {
+.hero h1 {
+    font-size: 2rem;
     color: #333;
-    text-align: center;
-    margin-bottom: 20px;
 }
 
-/* Tabla de Alumnos */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
+/* Options Section */
+.options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px 0;
+    background-color: #f0f0f0;
 }
 
-table th, table td {
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #ddd;
+.options button {
+    padding: 15px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-table th {
-    background-color: #4CAF50;
-    color: white;
+.options button:hover {
+    background-color: #0056b3;
 }
 
-table tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-/* Mensajes */
-.message {
-    text-align: center;
-    font-size: 18px;
-    margin: 10px 0;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border-radius: 4px;
-}
-
-.message.error {
-    background-color: #f44336; /* Rojo */
-}
-
-/* Formulario de agregar alumno */
-form {
-    max-width: 600px;
-    margin: 0 auto;
-    background-color: #fff;
+/* Sections */
+.seccion {
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: none;
 }
 
-form label {
+label {
     display: block;
-    margin: 10px 0 5px;
+    margin-top: 10px;
     font-weight: bold;
 }
 
-form input[type="text"] {
+input, textarea, select, button {
+    margin-top: 5px;
     width: 100%;
     padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
-form button {
-    width: 100%;
-    padding: 12px;
-    background-color: #4CAF50;
-    color: white;
-    font-weight: bold;
-    border: none;
-    border-radius: 4px;
+button[type="submit"] {
+    background-color: #28a745;
+    color: #fff;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
-form button:hover {
-    background-color: #45a049;
-}
-
-/* Botón de eliminar alumno */
-.delete-btn {
-    background-color: #f44336; /* Rojo */
-    color: white;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-
-.delete-btn:hover {
-    background-color: #e53935;
+button[type="submit"]:hover {
+    background-color: #218838;
 }

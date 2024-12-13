@@ -9,8 +9,8 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
 
 require_once 'db.php';
 
-// Obtener lista de usuarios de la base de datos
-$sql = "SELECT usuario_id, nombre, correo, rol FROM usuarios";
+// Obtener lista de grupos de la base de datos
+$sql = "SELECT id_grupo, nombre_grupo, grado, turno FROM grupos";
 $result = $conn->query($sql);
 
 ?>
@@ -19,8 +19,8 @@ $result = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Usuarios</title>
-    <link rel="stylesheet" href="CSS/gestion_usuarios.css">
+    <title>Gestión de Grupos</title>
+    <link rel="stylesheet" href="CSS/gestionar_grupos.css">
 </head>
 <body>
     <!-- Menú Superior -->
@@ -28,7 +28,7 @@ $result = $conn->query($sql);
         <nav>
             <ul>
                 <li><a href="administrador.php">Inicio</a></li>
-                <li><a href="gestionar_usuarios.php">Usuarios</a></li>
+                <li><a href="gestionar_grupos.php">Grupos</a></li>
                 <li><a href="logout.php">Cerrar Sesión</a></li>
             </ul>
         </nav>
@@ -36,14 +36,14 @@ $result = $conn->query($sql);
 
     <!-- Contenido Principal -->
     <main class="main-container">
-        <h1>Gestión de Usuarios</h1>
+        <h1>Gestión de Grupos</h1>
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Correo</th>
-                    <th>Rol</th>
+                    <th>Nombre del Grupo</th>
+                    <th>Grado</th>
+                    <th>Turno</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -52,23 +52,23 @@ $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>
-                                <td>{$row['usuario_id']}</td>
-                                <td>{$row['nombre']}</td>
-                                <td>{$row['correo']}</td>
-                                <td>{$row['rol']}</td>
+                                <td>{$row['id_grupo']}</td>
+                                <td>{$row['nombre_grupo']}</td>
+                                <td>{$row['grado']}</td>
+                                <td>{$row['turno']}</td>
                                 <td>
-                                    <a href='editar_usuario.php?id={$row['usuario_id']}'>Editar</a> |
-                                    <a href='eliminar_usuario.php?id={$row['usuario_id']}' onclick='return confirm(\"¿Estás seguro de eliminar este usuario?\");'>Eliminar</a>
+                                    <a href='editar_grupos.php?id={$row['id_grupo']}'>Editar</a> |
+                                    <a href=\"eliminar_grupo.php?id={$row['id_grupo']}\" onclick=\"return confirm('¿Estás seguro de eliminar este grupo?');\">Eliminar</a>
                                 </td>
                             </tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='5'>No hay usuarios registrados.</td></tr>";
+                    echo "<tr><td colspan='5'>No hay grupos registrados.</td></tr>";
                 }
                 ?>
             </tbody>
         </table>
-        <a href="agregar_usuario.php" class="btn">Agregar Nuevo Usuario</a>
+        <a href="agregar_grupo.php" class="btn">Agregar Nuevo Grupo</a>
     </main>
 </body>
 </html>

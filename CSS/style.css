@@ -15,7 +15,7 @@ body {
 
 /* Menú Superior */
 header {
-    background-color: #ff4d4d; /* Rojo */
+    background-color: #007bff; /* Azul brillante */
     padding: 10px 0;
     text-align: center;
 }
@@ -86,7 +86,7 @@ header nav ul li a:hover {
 .login-box button {
     width: 100%;
     padding: 12px;
-    background-color: #4CAF50; /* Verde */
+    background-color: #007bff; /* Azul brillante */
     border: none;
     border-radius: 4px;
     color: white;
@@ -95,5 +95,5 @@ header nav ul li a:hover {
 }
 
 .login-box button:hover {
-    background-color: #45a049; /* Verde oscuro al pasar el cursor */
+    background-color: #0056b3; /* Azul más oscuro al pasar el cursor */
 }

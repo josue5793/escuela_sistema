@@ -14,7 +14,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administrador</title>
-    <link rel="stylesheet" href="css/administrador.css">
+       <link rel="stylesheet" href="CSS/administrador2.css">
 
 </head>
 <body>
@@ -24,6 +24,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
             <ul>
                 <li><a href="administrador.php">Inicio</a></li>
                 <li><a href="gestionar_usuarios.php">Usuarios</a></li>
+                <li><a href="gestionar_grupos.php">Gestionar Grupos</a></li>
                 <li><a href="gestionar_alumnos.php">Alumnos</a></li>
                 <li><a href="gestionar_profesores.php">Profesores</a></li>
                 <li><a href="reportes.php">Reportes</a></li>
@@ -34,7 +35,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
 
     <!-- Contenido Principal -->
     <main class="main-container">
-        <h1>Bienvenido, <?php echo htmlspecialchars($_SESSION['nombre']); ?>!</h1>
+        <h1>Bienvenid@, <?php echo htmlspecialchars($_SESSION['nombre']); ?>!</h1>
         <h2>Este es tu panel de administrador. Usa el menú para navegar por las opciones disponibles.</h2>
     </main>
 </body>

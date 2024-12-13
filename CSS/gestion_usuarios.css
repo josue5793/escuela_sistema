@@ -1,123 +1,113 @@
-/* Gestión de usuarios */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-}
-
-/* Menú de navegación */
-header {
-    background-color: #333;
-    padding: 10px;
-    color: white;
-}
-
+/* Barra superior */
 header nav ul {
-    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1e3a5f;
+    padding: 10px;
     margin: 0;
-    padding: 0;
-    text-align: center;
+    list-style: none;
 }
 
 header nav ul li {
-    display: inline;
     margin: 0 15px;
 }
 
 header nav ul li a {
-    color: white;
+    color: #ffffff;
     text-decoration: none;
     font-weight: bold;
 }
 
-header nav ul li a:hover {
-    text-decoration: underline;
+header nav ul li:last-child {
+    margin-left: auto;
+}
+
+header nav ul li:last-child a {
+    color: #e63946;
 }
 
 /* Contenedor principal */
 .main-container {
+    margin: 20px auto;
     padding: 20px;
     max-width: 1200px;
-    margin: 20px auto;
-    background-color: #fff;
+    background-color: #f5f7fa;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Título principal */
 h1 {
-    color: #333;
     text-align: center;
-    margin-bottom: 20px;
+    color: #1e3a5f;
 }
 
-/* Tabla de usuarios */
+/* Tabla */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-table th, table td {
-    padding: 10px;
-    text-align: center;
+table thead tr {
+    background-color: #1e3a5f;
+    color: #ffffff;
+}
+
+table th,
+table td {
+    padding: 12px 15px;
     border: 1px solid #ddd;
 }
 
-table th {
-    background-color: #4CAF50;
-    color: white;
+table tbody tr:nth-child(even) {
+    background-color: #e9edf3;
 }
 
-table tr:nth-child(even) {
-    background-color: #f2f2f2;
+table tbody tr:hover {
+    background-color: #d6e4f0;
 }
 
-/* Estilos para botones de acción */
-.action-buttons a {
-    padding: 6px 12px;
-    margin: 5px;
-    border-radius: 4px;
-    color: white;
+/* Enlaces de acciones */
+table td a {
+    color: #1e3a5f;
     text-decoration: none;
     font-weight: bold;
-    text-align: center;
+    margin: 0 5px;
 }
 
-.action-buttons .edit {
-    background-color: #4CAF50; /* Verde */
-    transition: background-color 0.3s;
+table td a:hover {
+    color: #0c243b;
 }
 
-.action-buttons .edit:hover {
-    background-color: #45a049;
-}
-
-.action-buttons .delete {
-    background-color: #f44336; /* Rojo */
-    transition: background-color 0.3s;
-}
-
-.action-buttons .delete:hover {
-    background-color: #e53935;
-}
-
-.add-user {
-    display: block;
-    width: 200px;
-    margin: 20px auto;
-    text-align: center;
-    padding: 10px;
-    background-color: #008CBA; /* Azul */
-    color: white;
+/* Botón */
+.btn {
+    display: inline-block;
+    background-color: #1e3a5f;
+    color: #ffffff;
     text-decoration: none;
-    border-radius: 4px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 16px;
     font-weight: bold;
-    transition: background-color 0.3s;
+    margin-top: 20px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.add-user:hover {
-    background-color: #007bb5;
+.btn:hover {
+    background-color: #0c243b;
 }
 
+body, h1, h2, p, button, input, textarea, select {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+}

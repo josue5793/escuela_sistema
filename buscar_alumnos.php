@@ -2,11 +2,14 @@
 // Iniciar sesión
 session_start();
 
-// Verificar si el usuario ha iniciado sesión
+// Verificar si el usuario ha iniciado sesión y tiene un rol válido
 if (!isset($_SESSION['usuario_id']) || !in_array($_SESSION['rol'], ['administrador', 'director'])) {
     header("Location: login.php?error=acceso_denegado");
     exit;
 }
+
+// Definir la ruta de inicio según el rol del usuario
+$inicio_ruta = ($_SESSION['rol'] === 'administrador') ? 'administrador.php' : 'director.php';
 
 // Incluir conexión a la base de datos
 require_once 'db.php';
@@ -41,60 +44,13 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar Alumnos</title>
-    <link rel="stylesheet" href="css/gestionar_alumnos.css">
-    <style>
-        /* Estilo del menú */
-        nav {
-            background-color: #333;
-            color: white;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 10px;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-        .container {
-            padding: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        table th {
-            background-color: #f2f2f2;
-        }
-        table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        table tr:hover {
-            background-color: #f1f1f1;
-        }
-        .foto-alumno {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-    </style>
+    <link rel="stylesheet" href="CSS/gestionar_alumnos.css">
 </head>
 <body>
     <!-- Menú de navegación -->
     <nav>
         <div>
-            <a href="index.php">Inicio</a>
+            <a href="<?php echo $inicio_ruta; ?>">Inicio</a>
             <a href="gestionar_profesores.php">Profesores</a>
             <a href="gestionar_alumnos.php">Alumnos</a>
         </div>
