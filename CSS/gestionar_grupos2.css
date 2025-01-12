@@ -1,0 +1,152 @@
+/* Reset de estilos básicos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fc;
+    color: #333;
+    padding: 0;
+    margin: 0;
+}
+
+/* Estilos de la barra de navegación */
+.navbar {
+    background-color: #005f73;
+    color: white;
+    padding: 10px 20px;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar-right span {
+    font-size: 16px;
+}
+
+.logout-button {
+    background-color: #ef233c;
+    color: white;
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+    background-color: #d90429;
+}
+
+/* Contenedor principal */
+.main-container {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+/* Botones de control */
+.button-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+/* Estilo de los botones de control */
+.control-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 140px;  /* Ajustar ancho para igualar tamaño */
+    height: 140px; /* Ajustar alto para igualar tamaño */
+    background-color: #ffffff;
+    border: 2px solid #005f73;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #005f73;
+    font-size: 16px;  /* Asegurar tamaño de fuente adecuado */
+    font-weight: bold;
+    text-align: center; /* Centrar texto */
+    line-height: 1.4; /* Mejorar el espaciado entre líneas */
+    transition: all 0.3s;
+}
+
+.control-button i {
+    font-size: 36px;  /* Ajustar tamaño del ícono */
+    margin-bottom: 10px;
+}
+
+.control-button span {
+    display: block;
+    font-size: 14px;  /* Ajustar tamaño de texto */
+    text-transform: uppercase;  /* Opcional: poner el texto en mayúsculas */
+    letter-spacing: 1px;  /* Opcional: espaciado entre letras */
+}
+
+.control-button:hover {
+    background-color: #005f73;
+    color: white;
+    transform: translateY(-5px);
+}
+
+/* Tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+}
+
+table th {
+    background-color: #005f73;
+    color: white;
+}
+
+a {
+    color: #005f73;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Estilo para botones de acción en tabla */
+.action-button {
+    color: #005f73;
+    text-decoration: none;
+    padding: 5px 10px;
+    font-weight: bold;
+}
+
+.action-button.edit {
+    color: #006400;
+}
+
+.action-button.delete {
+    color: #ef233c;
+}
+
+.action-button:hover {
+    background-color: #005f73;
+    color: white;
+}

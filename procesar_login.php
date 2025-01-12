@@ -4,86 +4,86 @@ require_once 'db.php'; // Incluye la conexión a la base de datos
 
 // Verificar si se enviaron los datos del formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = trim($_POST['email']);
+    // Sanitizar y validar los datos del formulario
+    $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
     $password = trim($_POST['password']);
 
-    // Preparar la consulta para buscar el usuario por correo
-    $sql = "SELECT * FROM usuarios WHERE correo = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $usuario = $result->fetch_assoc();
-
-        // Verificar la contraseña ingresada contra el hash almacenado
-        if (password_verify($password, $usuario['contrasena'])) {
-            // Guardar datos del usuario en sesión
-            $_SESSION['usuario_id'] = $usuario['usuario_id'];
-            $_SESSION['nombre'] = $usuario['nombre'];
-            $_SESSION['rol'] = $usuario['rol'];
-
-            // Redirigir según el rol del usuario
-            $nombre = htmlspecialchars($usuario['nombre'], ENT_QUOTES, 'UTF-8'); // Sanitiza el nombre
-            $rol = $usuario['rol'];
-
-            if ($rol === 'administrador') {
-                echo "
-                    <script>
-                        alert('Bienvenido, $nombre. Eres Administrador.');
-                        window.location.href = 'administrador.php';
-                    </script>
-                ";
-            } elseif ($rol === 'profesor') {
-                echo "
-                    <script>
-                        alert('Bienvenido, $nombre. Eres Profesor.');
-                        window.location.href = 'profesor.php';
-                    </script>
-                ";
-            } elseif ($rol === 'director') {
-                echo "
-                    <script>
-                        alert('Bienvenido, $nombre. Eres Director.');
-                        window.location.href = 'director.php';
-                    </script>
-                ";
-            } else {
-                echo "
-                    <script>
-                        alert('Rol no reconocido.');
-                        window.location.href = 'login.php';
-                    </script>
-                ";
-            }
-            exit();
-        } else {
-            // Contraseña incorrecta
-            echo "
-                <script>
-                    alert('Contraseña incorrecta. Por favor, inténtalo de nuevo.');
-                    window.location.href = 'login.php';
-                </script>
-            ";
-        }
-    } else {
-        // Correo no encontrado
-        echo "
-            <script>
-                alert('El correo ingresado no está registrado.');
-                window.location.href = 'login.php';
-            </script>
-        ";
+    // Validación de formato de email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = "Correo electrónico no válido.";
+        header("Location: login.php");
+        exit;
     }
-    $stmt->close();
-    $conn->close();
+
+    try {
+        // Preparar la consulta para buscar el usuario por correo
+        $sql = "SELECT * FROM usuarios WHERE correo = :correo";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':correo', $email, PDO::PARAM_STR);
+        $stmt->execute();
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($usuario) {
+            // Verificar la contraseña ingresada contra el hash almacenado
+            if (password_verify($password, $usuario['contrasena'])) {
+                // Guardar datos del usuario en sesión
+                $_SESSION['usuario_id'] = $usuario['usuario_id'];
+                $_SESSION['nombre'] = $usuario['nombre'];
+
+                // Si el sistema está usando 'rol_id', obtén el rol de la tabla 'roles'
+                $rol_id = $usuario['rol_id'];
+                $sql_rol = "SELECT nombre FROM roles WHERE rol_id = :rol_id";
+                $stmt_rol = $pdo->prepare($sql_rol);
+                $stmt_rol->bindParam(':rol_id', $rol_id, PDO::PARAM_INT);
+                $stmt_rol->execute();
+                $rol = $stmt_rol->fetch(PDO::FETCH_ASSOC)['nombre'];
+
+                if ($rol) {
+                    $_SESSION['rol'] = $rol; // Almacenar el rol en la sesión
+
+                    // Redirigir según el rol del usuario
+                    $nombre = htmlspecialchars($usuario['nombre'], ENT_QUOTES, 'UTF-8');
+
+                    if ($rol === 'administrador') {
+                        $_SESSION['success'] = "Bienvenido, $nombre. Eres Administrador.";
+                        header("Location: administrador.php");
+                        exit;
+                    } elseif ($rol === 'profesor') {
+                        $_SESSION['success'] = "Bienvenido, $nombre. Eres Profesor.";
+                        header("Location: dashboard_profesor.php");
+                        exit;
+                    } elseif ($rol === 'director') {
+                        $_SESSION['success'] = "Bienvenido, $nombre. Eres Director.";
+                        header("Location: director.php");
+                        exit;
+                    } else {
+                        $_SESSION['error'] = "Rol no reconocido.";
+                        header("Location: login.php");
+                        exit;
+                    }
+                } else {
+                    $_SESSION['error'] = "Rol no encontrado.";
+                    header("Location: login.php");
+                    exit;
+                }
+            } else {
+                $_SESSION['error'] = "Contraseña incorrecta. Por favor, inténtalo de nuevo.";
+                header("Location: login.php");
+                exit;
+            }
+        } else {
+            $_SESSION['error'] = "El correo ingresado no está registrado.";
+            header("Location: login.php");
+            exit;
+        }
+    } catch (PDOException $e) {
+        $_SESSION['error'] = "Error al procesar el inicio de sesión: " . $e->getMessage();
+        header("Location: login.php");
+        exit;
+    }
 } else {
-    echo "
-        <script>
-            alert('Acceso no autorizado.');
-            window.location.href = 'login.php';
-        </script>
-    ";
+    $_SESSION['error'] = "Acceso no autorizado.";
+    header("Location: login.php");
+    exit;
 }
 ?>

@@ -7,92 +7,127 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
     exit;
 }
 
+// Incluir la conexión a la base de datos
 require_once 'db.php';
 
-// Inicializar variables para mensajes y datos
+// Inicializar variables
+$errores = [];
 $mensaje = "";
-$nombre_grupo = "";
-$grado = "";
-$turno = "";
+$nivel_id = $_POST['nivel_id'] ?? '';
+$grado = $_POST['grado'] ?? '';
+$turno = $_POST['turno'] ?? '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Obtener datos del formulario
-    $nombre_grupo = trim($_POST['nombre_grupo']);
-    $grado = trim($_POST['grado']);
-    $turno = trim($_POST['turno']);
+try {
+    // Obtener lista de niveles desde la base de datos
+    $sql_niveles = "SELECT nivel_id, nivel_nombre FROM niveles";
+    $stmt_niveles = $pdo->query($sql_niveles);
+    $niveles = $stmt_niveles->fetchAll(PDO::FETCH_ASSOC);
 
-    // Validar datos
-    if (empty($nombre_grupo) || empty($grado) || empty($turno)) {
-        $mensaje = "Todos los campos son obligatorios.";
-    } else {
-        // Insertar grupo en la base de datos
-        $sql = "INSERT INTO grupos (nombre_grupo, grado, turno) VALUES (?, ?, ?)";
-        $stmt = $conn->prepare($sql);
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Validar datos
+        if (empty($nivel_id)) {
+            $errores[] = "Debe seleccionar un nivel.";
+        }
+        if (empty($grado)) {
+            $errores[] = "El campo 'Grado' es obligatorio.";
+        }
+        if (empty($turno)) {
+            $errores[] = "El campo 'Turno' es obligatorio.";
+        }
 
-        if ($stmt) {
-            $stmt->bind_param("sss", $nombre_grupo, $grado, $turno);
+        // Insertar grupo si no hay errores
+        if (empty($errores)) {
+            $sql = "INSERT INTO grupos (nivel_id, grado, turno) VALUES (:nivel_id, :grado, :turno)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':nivel_id', $nivel_id, PDO::PARAM_INT);
+            $stmt->bindParam(':grado', $grado, PDO::PARAM_STR);
+            $stmt->bindParam(':turno', $turno, PDO::PARAM_STR);
+
             if ($stmt->execute()) {
                 $mensaje = "Grupo agregado exitosamente.";
-                $nombre_grupo = $grado = $turno = ""; // Limpiar los campos
+                $nivel_id = $grado = $turno = ''; // Limpiar los campos
             } else {
-                $mensaje = "Error al agregar el grupo: " . $stmt->error;
+                $errores[] = "Error al agregar el grupo. Intente nuevamente.";
             }
-            $stmt->close();
-        } else {
-            $mensaje = "Error en la preparación de la consulta: " . $conn->error;
         }
     }
+} catch (PDOException $e) {
+    $errores[] = "Error en la base de datos: " . $e->getMessage();
 }
-
-$conn->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar Grupo</title>
-    <link rel="stylesheet" href="css/agregar_grupo.css">
+    <title>Agregar Nuevo Grupo</title>
+    <link rel="stylesheet" href="css/agregar_grupo2.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet"> <!-- Para los íconos -->
 </head>
 <body>
-    <!-- Menú Superior -->
-    <header>
-        <nav>
-            <ul>
-                <li><a href="administrador.php">Inicio</a></li>
-                <li><a href="gestionar_grupos.php">Gestionar Grupos</a></li>
-                <li><a href="logout.php">Cerrar Sesión</a></li>
-            </ul>
-        </nav>
+    <!-- Barra de navegación superior -->
+    <header class="navbar">
+        <div class="navbar-container">
+            <h1>Agregar Nuevo Grupo</h1>
+            <div class="navbar-right">
+                <span>Administrador: <?php echo htmlspecialchars($_SESSION['nombre']); ?></span>
+                <a href="logout.php" class="logout-button">Cerrar Sesión</a>
+            </div>
+        </div>
     </header>
 
-    <!-- Contenido Principal -->
+    <!-- Botón de Panel del Administrador fuera de la barra de navegación -->
+    
+
+    <!-- Contenedor Principal -->
     <main class="main-container">
-        <h1>Agregar Nuevo Grupo</h1>
+    <div class="admin-panel-button-container">
+        <a href="administrador.php" class="admin-panel-button">
+            <i class="bi bi-house-door"></i> Panel del Administrador
+        </a>
+    </div>
+        <div class="form-container">
+            <h2>Formulario para Agregar Nuevo Grupo</h2>
+            <?php if (!empty($errores)): ?>
+                <div class="error-messages">
+                    <?php foreach ($errores as $error): ?>
+                        <p><?php echo htmlspecialchars($error); ?></p>
+                    <?php endforeach; ?>
+                </div>
+            <?php elseif (!empty($mensaje)): ?>
+                <div class="success-message">
+                    <p><?php echo htmlspecialchars($mensaje); ?></p>
+                </div>
+            <?php endif; ?>
+            <form action="" method="POST">
+                <div class="form-group">
+                    <label for="nivel_id">Nivel:</label>
+                    <select name="nivel_id" id="nivel_id" required>
+                        <option value="" disabled selected>Seleccione un nivel</option>
+                        <?php foreach ($niveles as $nivel): ?>
+                            <option value="<?php echo htmlspecialchars($nivel['nivel_id']); ?>" 
+                                <?php echo ($nivel_id == $nivel['nivel_id']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($nivel['nivel_nombre']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-        <?php if (!empty($mensaje)): ?>
-            <p class="mensaje"><?php echo htmlspecialchars($mensaje); ?></p>
-        <?php endif; ?>
+                <div class="form-group">
+                    <label for="grado">Grado:</label>
+                    <input type="text" name="grado" id="grado" value="<?php echo htmlspecialchars($grado); ?>" required>
+                </div>
 
-        <form method="POST" action="">
-            <div class="form-group">
-                <label for="nombre_grupo">Nombre del Grupo:</label>
-                <input type="text" id="nombre_grupo" name="nombre_grupo" value="<?php echo htmlspecialchars($nombre_grupo); ?>" required>
-            </div>
+                <div class="form-group">
+                    <label for="turno">Turno:</label>
+                    <input type="text" name="turno" id="turno" value="<?php echo htmlspecialchars($turno); ?>" required>
+                </div>
 
-            <div class="form-group">
-                <label for="grado">Grado:</label>
-                <input type="text" id="grado" name="grado" value="<?php echo htmlspecialchars($grado); ?>" required>
-            </div>
-
-            <div class="form-group">
-                <label for="turno">Turno:</label>
-                <input type="text" id="turno" name="turno" value="<?php echo htmlspecialchars($turno); ?>" required>
-            </div>
-
-            <button type="submit" class="btn">Agregar Grupo</button>
-        </form>
+                <div class="form-group">
+                    <button type="submit" class="btn">Agregar Grupo</button>
+                </div>
+            </form>
+        </div>
     </main>
 </body>
 </html>

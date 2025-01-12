@@ -3,29 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página de Inicio</title>
-    <link rel="stylesheet" href="CSS/style.css"> <!-- Enlace al archivo de estilos -->
+    <meta name="description" content="Bienvenido al sistema de Control Escolar del Centro Escolar Veracruz.">
+    <title>Página de Inicio - Sistema de Control Escolar</title>
+    <link rel="stylesheet" href="CSS/style2.css"> <!-- Enlace al archivo de estilos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- Íconos Font Awesome -->
 </head>
 <body>
-    <!-- Menú Superior -->
-    <header>
-        <nav>
-            <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="login.php">Iniciar sesión</a></li>
-                <li><a href="#">Otro Enlace</a></li>
-            </ul>
-        </nav>
-    </header>
-
     <!-- Contenedor Principal -->
-    <div class="main-container">
-        <div class="login-box">
-            <h2>Bienvenido al sistema de Control Escolar</h2>
-            <p>Centro Escolar Veracruz.</p>
+    <div class="container">
+        <!-- Sección del Logo -->
+        <header class="logo-header">
+            <img id="logo" src="images/CEV.png" alt="Logo Centro Escolar Veracruz" class="logo animated-logo">
+
+            <h1>Sistema de Control Escolar</h1>
+            <p><strong>Centro Escolar Veracruz</strong></p>
             <p>Escuela Particular Incorporada.</p>
-        </div>
+        </header>
+
+        <!-- Sección de Enlaces con Íconos -->
+        <section class="links-section">
+            <a href="index.html" class="link-item">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </a>
+            <a href="login.php" class="link-item">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Iniciar sesión</span>
+            </a>
+            <a href="#about" class="link-item">
+                <i class="fas fa-info-circle"></i>
+                <span>Acerca de</span>
+            </a>
+        </section>
+
+        <!-- Sección de Información -->
+        <main class="info-section">
+            <h2>Bienvenido</h2>
+            <p>Este sistema permite gestionar actividades escolares de manera eficiente, incluyendo inscripciones, calificaciones y más.</p>
+        </main>
+
+        <!-- Pie de Página -->
+        <footer>
+            <p>&copy; 2024 Centro Escolar Veracruz. Todos los derechos reservados.</p>
+            <p>
+                <a href="politica-privacidad.html">Política de Privacidad</a> |
+                <a href="terminos-condiciones.html">Términos y Condiciones</a>
+            </p>
+        </footer>
     </div>
 </body>
 </html>
-s
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const logo = document.getElementById("logo");
+    
+        function extractColors(image) {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+    
+            // Ajusta el tamaño del canvas al tamaño del logo
+            canvas.width = image.width;
+            canvas.height = image.height;
+    
+            // Dibuja la imagen en el canvas
+            ctx.drawImage(image, 0, 0);
+    
+            // Obtén los datos de píxeles
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const pixels = imageData.data;
+    
+            let r = 0, g = 0, b = 0, count = 0;
+    
+            // Calcula el promedio de colores
+            for (let i = 0; i < pixels.length; i += 4) {
+                r += pixels[i];     // Red
+                g += pixels[i + 1]; // Green
+                b += pixels[i + 2]; // Blue
+                count++;
+            }
+    
+            // Promedio
+            r = Math.round(r / count);
+            g = Math.round(g / count);
+            b = Math.round(b / count);
+    
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+    
+        function updateThemeColors(primaryColor) {
+            document.documentElement.style.setProperty('--primary-color', primaryColor);
+            document.documentElement.style.setProperty('--accent-color', lightenColor(primaryColor, 0.5));
+            document.documentElement.style.setProperty('--background-color', lightenColor(primaryColor, 0.8));
+        }
+    
+        function lightenColor(color, amount) {
+            const [r, g, b] = color.match(/\d+/g).map(Number);
+            const lighten = (value) => Math.min(255, Math.floor(value + (255 - value) * amount));
+            return `rgb(${lighten(r)}, ${lighten(g)}, ${lighten(b)})`;
+        }
+    
+        // Espera a que la imagen esté completamente cargada
+        logo.onload = () => {
+            const primaryColor = extractColors(logo);
+            updateThemeColors(primaryColor);
+        };
+    
+        // Carga inicial
+        if (logo.complete) {
+            const primaryColor = extractColors(logo);
+            updateThemeColors(primaryColor);
+        }
+    });
+    </script>
+    

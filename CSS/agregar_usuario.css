@@ -1,147 +1,137 @@
-/* General */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+/* Reset de estilos básicos */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-/* Header */
-header {
-    background-color: #333;
-    color: white;
-    padding: 10px 0;
-    text-align: center;
-}
-
-header nav ul {
-    list-style: none;
-    padding: 0;
-}
-
-header nav ul li {
-    display: inline;
-    margin: 0 15px;
-}
-
-header nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-}
-
-header nav ul li a:hover {
-    text-decoration: underline;
-}
-
-/* Main Container */
-.main-container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 20px;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-    font-size: 28px;
-    margin-bottom: 20px;
-    text-align: center;
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fc;
     color: #333;
+    padding: 0;
+    margin: 0;
 }
 
-/* Form Styles */
-form {
+/* Estilos de la barra de navegación */
+.navbar {
+    background-color: #005f73;
+    color: white;
+    padding: 10px 20px;
+}
+
+.navbar-container {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar-right span {
+    font-size: 16px;
+}
+
+.logout-button {
+    background-color: #ef233c;
+    color: white;
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+    background-color: #d90429;
+}
+
+/* Contenedor principal */
+.main-container {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+/* Estilos para el botón Panel de Administrador */
+.admin-panel-button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.admin-panel-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #005f73;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.admin-panel-button i {
+    margin-right: 10px;
+}
+
+.admin-panel-button:hover {
+    background-color: #008c96;
+}
+
+/* Formulario para Agregar Usuario */
+.form-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 0 auto; /* Centrado del formulario */
+}
+
+.form-container h2 {
+    color: #005f73;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+/* Estilos del formulario */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
 }
 
 label {
-    font-size: 16px;
-    margin-bottom: 8px;
+    font-size: 14px;
     color: #333;
+    margin-bottom: 5px;
 }
 
-input[type="text"], input[type="email"], input[type="password"], select {
+input, select {
     padding: 10px;
-    margin: 8px 0 20px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
     font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
 }
 
-input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, select:focus {
-    border-color: #4CAF50;
-    outline: none;
-}
-
-/* Submit Button */
-button[type="submit"] {
-    padding: 12px 20px;
-    background-color: #4CAF50;
+button.btn {
+    background-color: #005f73;
     color: white;
+    padding: 10px 20px;
     font-size: 16px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-button[type="submit"]:hover {
-    background-color: #45a049;
-}
-
-button[type="submit"]:active {
-    background-color: #398439;
-}
-
-/* Error and Success Messages */
-.message {
-    text-align: center;
-    font-size: 16px;
-    font-weight: bold;
-    margin-top: 20px;
-    padding: 10px;
-}
-
-.message.success {
-    color: #4CAF50;
-    background-color: #e8f5e9;
-}
-
-.message.error {
-    color: #e74c3c;
-    background-color: #fbe3e4;
-}
-
-/* Footer */
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    position: fixed;
     width: 100%;
-    bottom: 0;
+    transition: background-color 0.3s;
 }
 
-/* Media Queries for responsiveness */
-@media (max-width: 768px) {
-    .main-container {
-        margin: 20px;
-        padding: 15px;
-    }
-
-    h2 {
-        font-size: 24px;
-    }
-
-    label, input[type="text"], input[type="email"], input[type="password"], select {
-        font-size: 14px;
-    }
-
-    button[type="submit"] {
-        font-size: 14px;
-        padding: 10px 15px;
-    }
+button.btn:hover {
+    background-color: #008c96;
 }
