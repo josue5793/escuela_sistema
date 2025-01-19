@@ -15,22 +15,13 @@ $nivel_id = (int) $_GET['nivel_id'];
 
 try {
     // Consulta para obtener los grupos correspondientes al nivel_id
-    $query_grupos = "SELECT id_grupo, grado, turno FROM grupos WHERE nivel_id = ?";
-    $stmt = $conn->prepare($query_grupos);
+    $query_grupos = "SELECT id_grupo, CONCAT(grado, ' ', turno) AS grupo FROM grupos WHERE nivel_id = :nivel_id";
+    $stmt = $pdo->prepare($query_grupos);
 
-    if (!$stmt) {
-        throw new Exception("Error en la preparación de la consulta: " . $conn->error);
-    }
+    // Ejecutar la consulta
+    $stmt->execute(['nivel_id' => $nivel_id]);
 
-    $stmt->bind_param("i", $nivel_id);
-    $stmt->execute();
-
-    $result = $stmt->get_result();
-    $grupos = [];
-
-    while ($row = $result->fetch_assoc()) {
-        $grupos[] = $row;
-    }
+    $grupos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Verificar si se encontraron grupos
     if (empty($grupos)) {
@@ -38,14 +29,8 @@ try {
     } else {
         echo json_encode($grupos); // Devolver los grupos en formato JSON
     }
-
-    $stmt->close();
-} catch (Exception $e) {
+} catch (PDOException $e) {
     // Captura de errores y respuesta en formato JSON
     error_log("Error en obtener_grupos.php: " . $e->getMessage()); // Registrar error en el log del servidor
     echo json_encode(["error" => "Ocurrió un error al obtener los grupos."]);
 }
-
-// Cerrar la conexión a la base de datos
-$conn->close();
-?>

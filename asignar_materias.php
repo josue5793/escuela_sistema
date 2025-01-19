@@ -15,43 +15,50 @@ $mensaje = "";
 
 // Procesar el formulario de asignación de materias
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nivel_id = $_POST['nivel_id'] ?? null;
     $profesor_id = $_POST['profesor_id'] ?? null;
     $materia_id = $_POST['materia_id'] ?? null;
-    $nivel_id = $_POST['nivel_id'] ?? null;
+    $periodo_id = $_POST['periodo_id'] ?? null;
 
-    if ($profesor_id && $materia_id && $nivel_id) {
-        // Validar si el profesor ya tiene asignada esa materia en el nivel seleccionado
-        $check_query = "SELECT * FROM profesor_materia 
-                        WHERE profesor_id = ? AND materia_id = ? AND periodo_id = ?";
-        $stmt_check = $conn->prepare($check_query);
-        $stmt_check->bind_param("iii", $profesor_id, $materia_id, $nivel_id);
-        $stmt_check->execute();
-        $result_check = $stmt_check->get_result();
+    if ($nivel_id && $profesor_id && $materia_id && $periodo_id) {
+        // Validar si ya existe la asignación
+        $query_check = "SELECT * FROM profesor_materia WHERE profesor_id = :profesor_id AND materia_id = :materia_id AND periodo_id = :periodo_id";
+        $stmt_check = $pdo->prepare($query_check);
+        $stmt_check->execute([
+            ':profesor_id' => $profesor_id,
+            ':materia_id' => $materia_id,
+            ':periodo_id' => $periodo_id,
+        ]);
 
-        if ($result_check->num_rows > 0) {
-            $mensaje = "El profesor ya tiene asignada esta materia en este nivel.";
+        if ($stmt_check->rowCount() > 0) {
+            $mensaje = "El profesor ya tiene asignada esta materia en este periodo.";
         } else {
-            // Asignar la materia al profesor en el nivel seleccionado
-            $assign_query = "INSERT INTO profesor_materia (profesor_id, materia_id, periodo_id) 
-                             VALUES (?, ?, ?)";
-            $stmt_assign = $conn->prepare($assign_query);
-            $stmt_assign->bind_param("iii", $profesor_id, $materia_id, $nivel_id);
+            // Insertar la asignación
+            $query_insert = "INSERT INTO profesor_materia (profesor_id, materia_id, periodo_id) VALUES (:profesor_id, :materia_id, :periodo_id)";
+            $stmt_insert = $pdo->prepare($query_insert);
 
-            if ($stmt_assign->execute()) {
+            if ($stmt_insert->execute([
+                ':profesor_id' => $profesor_id,
+                ':materia_id' => $materia_id,
+                ':periodo_id' => $periodo_id,
+            ])) {
                 $mensaje = "Materia asignada exitosamente.";
             } else {
-                $mensaje = "Error al asignar la materia: " . $stmt_assign->error;
+                $mensaje = "Error al asignar la materia.";
             }
         }
-        $stmt_check->close();
     } else {
-        $mensaje = "Debe seleccionar un profesor, una materia y un nivel.";
+        $mensaje = "Debe seleccionar un nivel, un profesor, una materia y un periodo.";
     }
 }
 
-// Obtener los niveles disponibles
-$niveles_query = "SELECT nivel_id, nivel_nombre FROM niveles ORDER BY nivel_nombre";
-$niveles_result = $conn->query($niveles_query);
+// Obtener los niveles
+$query_niveles = "SELECT nivel_id, nivel_nombre FROM niveles ORDER BY nivel_nombre";
+$niveles = $pdo->query($query_niveles)->fetchAll(PDO::FETCH_ASSOC);
+
+// Obtener los periodos activos
+$query_periodos = "SELECT periodo_id, nombre FROM periodos WHERE activo = 1 ORDER BY nombre";
+$periodos = $pdo->query($query_periodos)->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -60,36 +67,24 @@ $niveles_result = $conn->query($niveles_query);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asignar Materias a Profesores</title>
+    <title>Asignar Materias</title>
     <link rel="stylesheet" href="CSS/asignar_materias.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <script>
         $(document).ready(function() {
-            // Cuando se selecciona un nivel, obtener los profesores correspondientes
+            // Cuando cambia el nivel
             $('#nivel_id').change(function() {
                 var nivel_id = $(this).val();
                 if (nivel_id) {
-                    // Obtener los profesores del nivel seleccionado
-                    $.ajax({
-                        url: 'get_profesores.php',  // Archivo que devolverá los profesores
-                        type: 'GET',
-                        data: { nivel_id: nivel_id },
-                        success: function(response) {
-                            $('#profesor_id').html(response);
-                            // Vaciar el campo de materias
-                            $('#materia_id').html('<option value="">Selecciona un nivel primero</option>');
-                        }
+                    // Cargar profesores
+                    $.get('get_profesores.php', { nivel_id: nivel_id }, function(data) {
+                        $('#profesor_id').html(data);
                     });
 
-                    // Obtener las materias del nivel seleccionado
-                    $.ajax({
-                        url: 'get_materias.php',  // Archivo que devolverá las materias
-                        type: 'GET',
-                        data: { nivel_id: nivel_id },
-                        success: function(response) {
-                            $('#materia_id').html(response);
-                        }
+                    // Cargar materias
+                    $.get('get_materias.php', { nivel_id: nivel_id }, function(data) {
+                        $('#materia_id').html(data);
                     });
                 } else {
                     $('#profesor_id').html('<option value="">Selecciona un nivel primero</option>');
@@ -100,56 +95,41 @@ $niveles_result = $conn->query($niveles_query);
     </script>
 </head>
 <body>
-    <!-- Barra de navegación -->
-    <header class="navbar">
-        <div class="navbar-container">
-            <h1>Asignar Materias a Profesores</h1>
-            <div class="navbar-right">
-                <span>Bienvenid@: <?php echo htmlspecialchars($_SESSION['nombre'] ?? ''); ?></span>
-                <a href="logout.php" class="logout-button">Cerrar Sesión</a>
-            </div>
-        </div>
+
+    <header>
+        <h1>Asignar Materias a Profesores</h1>
+        <a href="logout.php">Cerrar Sesión</a>
     </header>
-
-    <main class="main-container">
-        <h2>Asignar Materias</h2>
-
-        <div class="button-container">
+    <div class="button-container">
         <a href="administrador.php" class="control-button">
-                <i class="bi bi-house-door"></i>
-                <span>Regresar</span>
-            </a>
-            <a href="consulta_profesores.php" class="control-button">
-                <i class="bi bi-person-lines-fill"></i>
-                <span>Consulta de profesores y especialidad</span>
-            </a>
-
-            <!-- Botón para asignación de niveles -->
-            <a href="asignar_niveles.php" class="control-button">
-                <i class="bi bi-pen"></i>
-                <span>Asignación de Niveles</span>
-            </a>
-
-            <!-- Botón para asignar materias -->
-            <a href="asignar_materias.php" class="control-button">
-                <i class="bi bi-book"></i>
-                <span>Asignar Materias</span>
-            </a>
-        </div>
-        
-        <!-- Mostrar mensaje de éxito o error -->
+            <i class="bi bi-house-door"></i>
+            <span>Regresar</span>
+        </a>
+        <a href="consulta_profesores.php" class="control-button">
+            <i class="bi bi-person-lines-fill"></i>
+            <span>Consulta de profesores y especialidad</span>
+        </a>
+        <a href="asignar_niveles.php" class="control-button">
+            <i class="bi bi-pen"></i>
+            <span>Asignación de Niveles</span>
+        </a>
+        <a href="asignar_materias.php" class="control-button">
+            <i class="bi bi-book"></i>
+            <span>Asignar Materias</span>
+        </a>
+    </div>
+    <main>
         <?php if (!empty($mensaje)): ?>
-            <p class="mensaje"><?php echo htmlspecialchars($mensaje); ?></p>
+            <p><?php echo htmlspecialchars($mensaje); ?></p>
         <?php endif; ?>
 
-        <!-- Formulario de asignación -->
-        <form action="" method="POST">
+        <form method="POST">
             <label for="nivel_id">Nivel:</label>
             <select id="nivel_id" name="nivel_id" required>
                 <option value="">Selecciona un nivel</option>
-                <?php while ($nivel = $niveles_result->fetch_assoc()): ?>
+                <?php foreach ($niveles as $nivel): ?>
                     <option value="<?php echo $nivel['nivel_id']; ?>"><?php echo htmlspecialchars($nivel['nivel_nombre']); ?></option>
-                <?php endwhile; ?>
+                <?php endforeach; ?>
             </select>
 
             <label for="profesor_id">Profesor:</label>
@@ -162,13 +142,16 @@ $niveles_result = $conn->query($niveles_query);
                 <option value="">Selecciona un nivel primero</option>
             </select>
 
+            <label for="periodo_id">Periodo:</label>
+            <select id="periodo_id" name="periodo_id" required>
+                <option value="">Selecciona un periodo</option>
+                <?php foreach ($periodos as $periodo): ?>
+                    <option value="<?php echo $periodo['periodo_id']; ?>"><?php echo htmlspecialchars($periodo['nombre']); ?></option>
+                <?php endforeach; ?>
+            </select>
+
             <button type="submit">Asignar Materia</button>
         </form>
     </main>
 </body>
 </html>
-
-<?php
-// Cerrar conexión
-$conn->close();
-?>

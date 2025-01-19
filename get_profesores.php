@@ -1,22 +1,33 @@
 <?php
-require 'db.php';
+require 'db.php'; // Se incluye el archivo con la conexión PDO
 
-$nivel_id = $_GET['nivel_id'] ?? null;
+$nivel_id = $_GET['nivel_id'] ?? null; // Obtener el nivel_id de la solicitud GET
+
 if ($nivel_id) {
-    $query = "SELECT p.profesor_id, u.nombre AS profesor_nombre 
-              FROM profesores p
-              JOIN usuarios u ON p.usuario_id = u.usuario_id
-              WHERE p.nivel_id = ? 
-              ORDER BY u.nombre";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $nivel_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    try {
+        // Preparar la consulta con marcadores de posición
+        $query = "SELECT p.profesor_id, u.nombre AS profesor_nombre 
+                  FROM profesores p
+                  JOIN usuarios u ON p.usuario_id = u.usuario_id
+                  JOIN profesor_nivel pn ON p.profesor_id = pn.profesor_id
+                  WHERE pn.nivel_id = :nivel_id 
+                  ORDER BY u.nombre";
+        $stmt = $pdo->prepare($query); // Preparar la consulta
+        $stmt->bindParam(':nivel_id', $nivel_id, PDO::PARAM_INT); // Enlazar el parámetro nivel_id
 
-    echo '<option value="">Selecciona un profesor</option>';
-    while ($profesor = $result->fetch_assoc()) {
-        echo '<option value="' . $profesor['profesor_id'] . '">' . htmlspecialchars($profesor['profesor_nombre']) . '</option>';
+        $stmt->execute(); // Ejecutar la consulta
+
+        // Generar las opciones para el dropdown
+        echo '<option value="">Selecciona un profesor</option>';
+        while ($profesor = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            echo '<option value="' . $profesor['profesor_id'] . '">' . htmlspecialchars($profesor['profesor_nombre']) . '</option>';
+        }
+    } catch (PDOException $e) {
+        // En caso de error, mostrar un mensaje genérico
+        echo '<option value="">Error al cargar profesores: ' . htmlspecialchars($e->getMessage()) . '</option>';
     }
-    $stmt->close();
+} else {
+    // Si no se recibe nivel_id, mostrar un mensaje en el dropdown
+    echo '<option value="">Nivel no especificado</option>';
 }
 ?>

@@ -3,7 +3,7 @@ session_start();
 require_once 'db.php';
 
 // Verificar si el usuario está logueado
-if (!isset($_SESSION['usuario_id'])) {
+if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
     header("Location: login.php");
     exit;
 }
@@ -11,51 +11,59 @@ if (!isset($_SESSION['usuario_id'])) {
 // Variables para filtros
 $nivelSeleccionado = $_GET['nivel'] ?? '';
 $grupoSeleccionado = $_GET['grupo'] ?? '';
-$searchField = $_GET['field'] ?? '';
-$searchValue = $_GET['search'] ?? '';
-$exactMatch = isset($_GET['exact']);
+$mostrarTodos = isset($_GET['mostrar_todos']);
+$busqueda = $_GET['busqueda'] ?? '';  // Nueva variable para la búsqueda
+$result = [];
 
 try {
-    // Consulta base
-    $query = "SELECT a.*, n.nivel_nombre, CONCAT(g.grado, ' ', g.turno) AS grupo 
-              FROM alumnos a
-              LEFT JOIN niveles n ON a.nivel_id = n.nivel_id
-              LEFT JOIN grupos g ON a.grupo_id = g.id_grupo";
-
-    // Filtros dinámicos
-    $filters = [];
-    $params = [];
-
-    if ($nivelSeleccionado) {
-        $filters[] = "a.nivel_id = ?";
-        $params[] = $nivelSeleccionado;
-    }
-
-    if ($grupoSeleccionado) {
-        $filters[] = "a.grupo_id = ?";
-        $params[] = $grupoSeleccionado;
-    }
-
-    if ($searchField && $searchValue) {
-        $operator = $exactMatch ? '=' : 'LIKE';
-        $searchValue = $exactMatch ? $searchValue : "%$searchValue%";
-        $filters[] = "$searchField $operator ?";
-        $params[] = $searchValue;
-    }
-
-    if ($filters) {
-        $query .= " WHERE " . implode(' AND ', $filters);
-    }
-
-    $query .= " ORDER BY n.nivel_nombre, g.grado, g.turno, a.apellidos";
-
-    $stmt = $pdo->prepare($query);
-    $stmt->execute($params);
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Obtener niveles y grupos para los controles
+    // Obtener niveles
     $niveles = $pdo->query("SELECT * FROM niveles")->fetchAll(PDO::FETCH_ASSOC);
-    $grupos = $pdo->query("SELECT * FROM grupos")->fetchAll(PDO::FETCH_ASSOC);
+
+    // Si se ha seleccionado un nivel, obtener los grupos correspondientes
+    $grupos = [];
+    if ($nivelSeleccionado) {
+        $stmtGrupos = $pdo->prepare("SELECT * FROM grupos WHERE nivel_id = ?");
+        $stmtGrupos->execute([$nivelSeleccionado]);
+        $grupos = $stmtGrupos->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Consultar registros si se solicitan
+    if ($nivelSeleccionado || $grupoSeleccionado || $mostrarTodos || $busqueda) {
+        // Consulta base
+        $query = "SELECT a.*, n.nivel_nombre, CONCAT(g.grado, ' ', g.turno) AS grupo 
+                  FROM alumnos a
+                  LEFT JOIN niveles n ON a.nivel_id = n.nivel_id
+                  LEFT JOIN grupos g ON a.grupo_id = g.id_grupo";
+
+        $filters = [];
+        $params = [];
+
+        if ($nivelSeleccionado) {
+            $filters[] = "a.nivel_id = ?";
+            $params[] = $nivelSeleccionado;
+        }
+
+        if ($grupoSeleccionado) {
+            $filters[] = "a.grupo_id = ?";
+            $params[] = $grupoSeleccionado;
+        }
+
+        if ($busqueda) {
+            $filters[] = "(a.nombres LIKE ? OR a.apellidos LIKE ?)";
+            $params[] = "%$busqueda%";  // Búsqueda por aproximación
+            $params[] = "%$busqueda%";  // Búsqueda por aproximación
+        }
+
+        if ($filters) {
+            $query .= " WHERE " . implode(' AND ', $filters);
+        }
+
+        $query .= " ORDER BY n.nivel_nombre, g.grado, g.turno, a.apellidos";
+
+        $stmt = $pdo->prepare($query);
+        $stmt->execute($params);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 } catch (PDOException $e) {
     die("Error al consultar los alumnos: " . $e->getMessage());
@@ -68,7 +76,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consultar Alumnos</title>
-    <link rel="stylesheet" href="CSS/consultar_alumnos2.css">
+    <link rel="stylesheet" href="CSS/consultar_alumnos.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
@@ -84,7 +92,7 @@ try {
 </header>
 
 <main class="main-container">
-<div class="button-container">
+    <div class="button-container">
         <a href="agregar_alumno.php" class="control-button">
             <i class="bi bi-person"></i>
             <span>Agregar Alumno</span>
@@ -98,13 +106,18 @@ try {
             <i class="bi bi-house-door"></i>
             <span>Panel Administrador</span>
         </a>
+        <a href="promover_alumnos.php" class="control-button">
+            <i class="bi bi-arrow-up-circle"></i>
+            <span>Promover Alumnos</span>
+        </a>
     </div>
+
     <section class="filter-section">
         <h2>Filtrar por Nivel y Grupo</h2>
         <form method="GET" action="">
             <label for="nivel">Nivel:</label>
             <select name="nivel" id="nivel" onchange="this.form.submit()">
-                <option value="">Todos</option>
+                <option value="">Seleccione un nivel</option>
                 <?php foreach ($niveles as $nivel): ?>
                     <option value="<?php echo $nivel['nivel_id']; ?>" <?php echo $nivelSeleccionado == $nivel['nivel_id'] ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($nivel['nivel_nombre']); ?>
@@ -112,28 +125,79 @@ try {
                 <?php endforeach; ?>
             </select>
 
-            <label for="grupo">Grupo:</label>
-            <select name="grupo" id="grupo" onchange="this.form.submit()">
-                <option value="">Todos</option>
-                <?php foreach ($grupos as $grupo): ?>
-                    <option value="<?php echo $grupo['id_grupo']; ?>" <?php echo $grupoSeleccionado == $grupo['id_grupo'] ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($grupo['grado'] . ' ' . $grupo['turno']); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+            <?php if ($nivelSeleccionado): ?>
+                <label for="grupo">Grupo:</label>
+                <select name="grupo" id="grupo" onchange="this.form.submit()">
+                    <option value="">Todos los grupos</option>
+                    <?php foreach ($grupos as $grupo): ?>
+                        <option value="<?php echo $grupo['id_grupo']; ?>" <?php echo $grupoSeleccionado == $grupo['id_grupo'] ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($grupo['grado'] . ' ' . $grupo['turno']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            <?php endif; ?>
 
-            <label for="field">Buscar por:</label>
-            <select name="field" id="field">
-                <option value="a.nombres" <?php echo $searchField === 'a.nombres' ? 'selected' : ''; ?>>Nombres</option>
-                <option value="a.apellidos" <?php echo $searchField === 'a.apellidos' ? 'selected' : ''; ?>>Apellidos</option>
-            </select>
-            <input type="text" name="search" placeholder="Buscar..." value="<?php echo htmlspecialchars(str_replace('%', '', $searchValue)); ?>">
-            <label><input type="checkbox" name="exact" <?php echo $exactMatch ? 'checked' : ''; ?>> Coincidencia exacta</label>
+            <button type="submit" name="mostrar_todos" value="1">Mostrar Todos</button>
+        </form>
+    </section>
+
+    <!-- Formulario de búsqueda -->
+    <section class="search-section">
+        <h2>Buscar por Nombre o Apellidos</h2>
+        <form method="GET" action="">
+            <input type="text" name="busqueda" placeholder="Buscar nombre o apellido" value="<?php echo htmlspecialchars($busqueda); ?>">
             <button type="submit">Buscar</button>
         </form>
     </section>
 
-    <?php if (!empty($result)): ?>
+    <?php if ($mostrarTodos): ?>
+        <?php
+        // Agrupar resultados por nivel y grupo
+        $clasificados = [];
+        foreach ($result as $row) {
+            $clasificados[$row['nivel_nombre']][$row['grupo']][] = $row;
+        }
+        ?>
+        
+        <?php foreach ($clasificados as $nivel => $grupos): ?>
+            <h2>Nivel: <?php echo htmlspecialchars($nivel); ?></h2>
+            <?php foreach ($grupos as $grupo => $alumnos): ?>
+                <h3>Grupo: <?php echo htmlspecialchars($grupo); ?></h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Foto</th>
+                            <th>Matrícula</th>
+                            <th>Apellidos</th>
+                            <th>Nombres</th>
+                            <th>Dirección</th>
+                            <th>Teléfono</th>
+                            <th>Fecha de Nacimiento</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($alumnos as $alumno): ?>
+                            <tr onclick="showModal(<?php echo htmlspecialchars(json_encode($alumno)); ?>)">
+                                
+                                <td><img src="uploads/<?php echo htmlspecialchars($alumno['foto']); ?>" alt="Foto del Alumno" width="50"></td>
+                                <td><?php echo htmlspecialchars($alumno['matricula']); ?></td>
+                                <td><?php echo htmlspecialchars($alumno['apellidos']); ?></td>
+                                <td><?php echo htmlspecialchars($alumno['nombres']); ?></td>
+                                <td><?php echo htmlspecialchars($alumno['direccion']); ?></td>
+                                <td><?php echo htmlspecialchars($alumno['telefono']); ?></td>
+                                <td><?php echo htmlspecialchars($alumno['fecha_nacimiento']); ?></td>
+                                <td>
+                                    <a href="editar_alumno.php?id=<?php echo $alumno['alumno_id']; ?>" class="action-button">Editar</a>
+                                    <a href="eliminar_alumno.php?id=<?php echo $alumno['alumno_id']; ?>" class="action-button" onclick="return confirm('¿Estás seguro de eliminar a este alumno?')">Eliminar</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endforeach; ?>
+        <?php endforeach; ?>
+    <?php elseif (!empty($result)): ?>
         <table>
             <thead>
                 <tr>
@@ -143,71 +207,72 @@ try {
                     <th>Nombres</th>
                     <th>Grupo</th>
                     <th>Nivel</th>
-                    <th>Dirección</th>
-                    <th>Teléfono</th>
-                    <th>Fecha de Nacimiento</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($result as $row): ?>
-                    <tr onclick="showModal(<?php echo htmlspecialchars(json_encode($row)); ?>)">
-                        <td><img src="uploads/<?php echo htmlspecialchars($row['foto']); ?>" alt="Foto del Alumno" width="50"></td>
+                    <tr>
+                        <td><img src="uploads/<?php echo htmlspecialchars($row['foto']); ?>" alt="Foto" width="50"></td>
                         <td><?php echo htmlspecialchars($row['matricula']); ?></td>
                         <td><?php echo htmlspecialchars($row['apellidos']); ?></td>
                         <td><?php echo htmlspecialchars($row['nombres']); ?></td>
                         <td><?php echo htmlspecialchars($row['grupo']); ?></td>
                         <td><?php echo htmlspecialchars($row['nivel_nombre']); ?></td>
-                        <td><?php echo htmlspecialchars($row['direccion']); ?></td>
-                        <td><?php echo htmlspecialchars($row['telefono']); ?></td>
-                        <td><?php echo htmlspecialchars($row['fecha_nacimiento']); ?></td>
+                        <td>
+                            <a href="editar_alumno.php?id=<?php echo $row['alumno_id']; ?>" class="action-button">Editar</a>
+                            <a href="eliminar_alumno.php?id=<?php echo $row['alumno_id']; ?>" class="action-button" onclick="return confirm('¿Estás seguro de eliminar este alumno?')">Eliminar</a>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     <?php else: ?>
-        <p>No se encontraron alumnos con los criterios seleccionados.</p>
+        <p>No se encontraron resultados.</p>
     <?php endif; ?>
-
-    <!-- Modal -->
-    <div class="modal-overlay" id="modal-overlay"></div>
-    <div class="modal" id="modal">
-        <button class="modal-close" onclick="closeModal()">×</button>
-        <div class="modal-header">Detalles del Alumno</div>
-        <div class="modal-content" id="modal-content"></div> <!-- Cambiado -->
-    </div>
 </main>
+<!-- Modal de Detalles del Alumno -->
+<!-- Modal -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-left">
+            <img id="modal-student-photo" src="" alt="Foto del Alumno">
+        </div>
+        <div class="modal-right">
+            <h2 id="modal-student-name"></h2>
+            <p><strong>Matrícula:</strong> <span id="modal-student-id"></span></p>
+            <p><strong>Apellidos:</strong> <span id="modal-student-lastname"></span></p>
+            <p><strong>Dirección:</strong> <span id="modal-student-address"></span></p>
+            <p><strong>Teléfono:</strong> <span id="modal-student-phone"></span></p>
+            <p><strong>Fecha de Nacimiento:</strong> <span id="modal-student-dob"></span></p>
+        </div>
+        <span class="close" onclick="closeModal()">&times;</span>
+    </div>
+</div>
 
 <script>
-    function showModal(data) {
-        const modal = document.getElementById('modal');
-        const modalOverlay = document.getElementById('modal-overlay');
-        const modalContent = document.getElementById('modal-content');
+function showModal(alumno) {
+    document.getElementById("modal-student-photo").src = "uploads/" + alumno.foto;
+    document.getElementById("modal-student-id").textContent = alumno.matricula;
+    document.getElementById("modal-student-name").textContent = alumno.nombres + " " + alumno.apellidos;
+    document.getElementById("modal-student-address").textContent = alumno.direccion;
+    document.getElementById("modal-student-phone").textContent = alumno.telefono;
+    document.getElementById("modal-student-dob").textContent = alumno.fecha_nacimiento;
 
-        modalContent.innerHTML = `
-            <div>
-                <img src="uploads/${data.foto}" alt="Foto del Alumno" class="modal-img"> <!-- Cambiado -->
-            </div>
-            <div class="modal-details"> <!-- Cambiado -->
-                <p><strong>Matrícula:</strong> ${data.matricula}</p>
-                <p><strong>Apellidos:</strong> ${data.apellidos}</p>
-                <p><strong>Nombres:</strong> ${data.nombres}</p>
-                <p><strong>Grupo:</strong> ${data.grupo}</p>
-                <p><strong>Nivel:</strong> ${data.nivel_nombre}</p>
-                <p><strong>Dirección:</strong> ${data.direccion}</p>
-                <p><strong>Teléfono:</strong> ${data.telefono}</p>
-                <p><strong>Fecha de Nacimiento:</strong> ${data.fecha_nacimiento}</p>
-            </div>
-        `;
+    document.getElementById("modal").style.display = "flex";
+}
 
-        modal.style.display = 'block';
-        modalOverlay.style.display = 'block';
+function closeModal() {
+    document.getElementById("modal").style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target == document.getElementById("modal")) {
+        closeModal();
     }
-
-    function closeModal() {
-        document.getElementById('modal').style.display = 'none';
-        document.getElementById('modal-overlay').style.display = 'none';
-    }
+}
 </script>
+
 
 </body>
 </html>

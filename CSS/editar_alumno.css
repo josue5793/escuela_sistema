@@ -56,82 +56,89 @@ body {
     text-align: center;
 }
 
-/* Estilos para el botón Panel de Administrador */
-.admin-panel-button-container {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.admin-panel-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #005f73;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: background-color 0.3s;
-}
-
-.admin-panel-button i {
-    margin-right: 10px;
-}
-
-.admin-panel-button:hover {
-    background-color: #008c96;
-}
-
-/* Formulario para Agregar Usuario */
-.form-container {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
-    margin: 0 auto; /* Centrado del formulario */
-}
-
-.form-container h2 {
+/* Título */
+h2 {
     color: #005f73;
     margin-bottom: 20px;
-    font-size: 24px;
 }
 
-/* Estilos del formulario */
-.form-group {
-    margin-bottom: 15px;
-    text-align: left;
+/* Formulario de edición */
+form {
+    background-color: #ffffff;
+    border: 1px solid #005f73;
+    border-radius: 10px;
+    padding: 30px;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
-label {
+form label {
+    display: block;
+    margin-bottom: 8px;
     font-size: 14px;
-    color: #333;
-    margin-bottom: 5px;
+    font-weight: bold;
+    color: #005f73;
 }
 
-input, select {
+form input[type="text"],
+form input[type="date"],
+form select,
+form input[type="file"] {
+    width: 100%;
     padding: 10px;
-    font-size: 16px;
+    margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 100%;
+    font-size: 14px;
 }
 
-button.btn {
+form input[type="text"]:focus,
+form input[type="date"]:focus,
+form select:focus {
+    border-color: #005f73;
+    outline: none;
+}
+
+form button {
+    width: 100%;
+    padding: 12px;
     background-color: #005f73;
     color: white;
-    padding: 10px 20px;
-    font-size: 16px;
+    font-weight: bold;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    width: 100%;
     transition: background-color 0.3s;
 }
 
-button.btn:hover {
-    background-color: #008c96;
+form button:hover {
+    background-color: #003f53;
+}
+
+/* Mensajes de error */
+.error-message {
+    color: #d90429;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+/* Imagen de la foto actual */
+img {
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+/* Estilos para los botones */
+.back-button {
+    background-color: #ef233c;
+    color: white;
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.back-button:hover {
+    background-color: #d90429;
 }

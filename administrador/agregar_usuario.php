@@ -8,7 +8,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
 }
 
 // Incluir la conexión a la base de datos
-require_once 'db.php';
+require_once '../db.php';
 
 // Procesar el formulario cuando se envían los datos
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Botón de Panel del Administrador fuera de la barra de navegación -->
     <div class="admin-panel-button-container">
-        <a href="administrador.php" class="admin-panel-button">
+        <a href="administrador_dashboard.php" class="admin-panel-button">
             <i class="bi bi-house-door"></i> Panel del Administrador
         </a>
     </div>

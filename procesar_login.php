@@ -46,15 +46,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     if ($rol === 'administrador') {
                         $_SESSION['success'] = "Bienvenido, $nombre. Eres Administrador.";
-                        header("Location: administrador.php");
+                        header("Location: administrador\administrador_dashboard.php");
                         exit;
                     } elseif ($rol === 'profesor') {
                         $_SESSION['success'] = "Bienvenido, $nombre. Eres Profesor.";
-                        header("Location: dashboard_profesor.php");
+                        header("Location: profesor\dashboard_profesor.php");
                         exit;
                     } elseif ($rol === 'director') {
                         $_SESSION['success'] = "Bienvenido, $nombre. Eres Director.";
-                        header("Location: director.php");
+                        header("Location: director\director.php");
                         exit;
                     } else {
                         $_SESSION['error'] = "Rol no reconocido.";

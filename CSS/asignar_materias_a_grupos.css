@@ -63,6 +63,7 @@ body {
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 30px;
+    text-align: left;
 }
 
 .welcome-section h2 {
@@ -72,11 +73,10 @@ body {
 
 .welcome-section p {
     font-size: 16px;
-    line-height: 1.6;
     color: #333;
 }
 
-/* Botones de control */
+/* Contenedor de botones de control */
 .button-container {
     display: flex;
     justify-content: center;
@@ -113,122 +113,100 @@ body {
     transform: translateY(-5px);
 }
 
-/* Estilos de la tabla de profesores */
+/* Estilos del formulario */
+.formulario {
+    margin-top: 20px;
+    text-align: left;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.formulario label {
+    font-size: 16px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.formulario select, .formulario button {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #005f73;
+    border-radius: 5px;
+    background-color: white;
+    color: #005f73;
+    width: 100%;
+    margin-bottom: 20px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.formulario select:focus, .formulario button:hover {
+    background-color: #005f73;
+    color: white;
+    border-color: #005f73;
+}
+
+/* Mensaje de notificación */
+.mensaje {
+    background-color: #ffcc00;
+    color: #333;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.mensaje p {
+    font-size: 16px;
+}
+
+/* Estilos para la tabla de asignaciones */
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
 }
 
-table, th, td {
-    border: 1px solid #005f73;
-}
-
-th, td {
-    padding: 10px;
+table th, table td {
+    padding: 12px;
     text-align: left;
+    border-bottom: 1px solid #ddd;
 }
 
-th {
+table th {
     background-color: #005f73;
     color: white;
 }
 
-td {
-    background-color: #ffffff;
+table tr:hover {
+    background-color: #f1f1f1;
 }
 
-td a {
+/* Estilos de los enlaces en la tabla */
+table td a {
     color: #005f73;
     text-decoration: none;
     font-weight: bold;
+    transition: color 0.3s;
 }
 
-td a:hover {
-    text-decoration: underline;
+table td a:hover {
+    color: #d90429;
 }
 
-/* Estilo del formulario de especialidad */
-form {
+/* Estilo para los niveles agrupados */
+h3 {
+    color: #005f73;
+    margin-top: 30px;
+}
+
+h4 {
+    color: #333;
     margin-top: 20px;
-    background-color: #e6f2f2;
-    padding: 20px;
-    border-radius: 10px;
-    width: 400px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
-form input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 2px solid #005f73;
-    border-radius: 5px;
-    font-size: 16px;
+/* Estilos para los grupos */
+h4 {
+    color: #005f73;
 }
 
-form button {
-    width: 100%;
-    padding: 10px;
-    background-color: #005f73;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-form button:hover {
-    background-color: #003c49;
-}
-
- /* Hacer la página responsiva */
- body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
-}
-.navbar-right {
-    display: flex;
-    align-items: center;
-}
-.main-container {
-    padding: 20px;
-}
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-table th, table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-table th {
-    background-color: #f2f2f2;
-}
-.search-form {
-    margin-bottom: 20px;
-    display: flex;
-    gap: 10px;
-}
-@media (max-width: 768px) {
-    .navbar {
-        flex-wrap: wrap;
-        text-align: center;
-    }
-    .search-form {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-}

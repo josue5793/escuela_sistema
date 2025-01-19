@@ -1,16 +1,11 @@
 <?php
-// Iniciar la sesión
 session_start();
 
-// Verificar si el usuario ha iniciado sesión y si tiene el rol adecuado
+// Verificar si el usuario está logueado y tiene el rol de administrador
 if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'director') {
-    // Redirigir al login con un mensaje de error
-    header("Location: login.php?error=acceso_denegado");
+    header("Location: login.php");
     exit;
 }
-
-// Obtener el nombre del director desde la sesión
-$nombre_director = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : 'Director';
 ?>
 
 <!DOCTYPE html>
@@ -18,52 +13,68 @@ $nombre_director = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : 'Director'
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Control - Director</title>
-    <link rel="stylesheet" href="css/director.css">
+    <title>Panel de Administrador</title>
+    <link rel="stylesheet" href="CSS/director.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet"> <!-- Para los íconos -->
 </head>
 <body>
-    <!-- Menú Superior -->
-    <header>
-        <nav>
-            <ul>
-                <li><a href="director.php">Inicio</a></li>
-                <li><a href="gestionar_profesores.php">Profesores</a></li>
-                <li><a href="gestionar_alumnos.php">Alumnos</a></li>
-                <li><a href="reportes.php">Reportes</a></li>
-                <li><a href="logout.php">Cerrar sesión</a></li>
-            </ul>
-        </nav>
+    <!-- Barra de navegación superior -->
+    <header class="navbar">
+        <div class="navbar-container">
+            <h1>Panel del director</h1>
+            <div class="navbar-right">
+                <span>Bienvenid@: <?php echo htmlspecialchars($_SESSION['nombre']); ?></span>
+                <a href="logout.php" class="logout-button">Cerrar Sesión</a>
+            </div>
+        </div>
     </header>
 
-    <!-- Contenedor Principal -->
-    <div class="main-container">
-        <h1>Bienvenido, <?php echo htmlspecialchars($nombre_director); ?>!</h1>
-
-        <!-- Sección de Estadísticas -->
-        <section class="stats">
-            <div class="stat-card">
-                <h2>Alumnos</h2>
-                <p>250</p>
-            </div>
-            <div class="stat-card">
-                <h2>Profesores</h2>
-                <p>35</p>
-            </div>
-            <div class="stat-card">
-                <h2>Grupos</h2>
-                <p>10</p>
-            </div>
+    <!-- Contenido Principal -->
+    <main class="main-container">
+        <!-- Sección de bienvenida -->
+        <section class="welcome-section">
+            <h2>Bienvenid@ Director</h2>
+            <p>Desde aquí puedes gestionar los usuarios, grupos, alumnos, profesores, materias y generar reportes. Usa los botones a continuación para navegar a las diferentes secciones del sistema. Si necesitas agregar más opciones en el futuro, estas aparecerán en este panel.</p>
         </section>
 
-        <!-- Accesos Rápidos -->
-        <section class="quick-links">
-            <h2>Accesos Rápidos</h2>
-            <div class="links-container">
-                <a href="gestionar_profesores.php" class="quick-link">Gestionar Profesores</a>
-                <a href="gestionar_alumnos.php" class="quick-link">Gestionar Alumnos</a>
-                <a href="reportes.php" class="quick-link">Generar Reportes</a>
-            </div>
-        </section>
-    </div>
+        <!-- Botones de control -->
+        <div class="button-container">
+           
+            <a href="gestionar_grupos.php" class="control-button">
+                <i class="bi bi-people"></i>
+                <span>Gestión de Grupos</span>
+            </a>
+            <a href="gestionar_alumnos.php" class="control-button">
+                <i class="bi bi-mortarboard"></i>
+                <span>Alumnos</span>
+            </a>
+            <a href="gestionar_profesores.php" class="control-button">
+                <i class="bi bi-person-badge"></i>
+                <span>Profesores</span>
+            </a>
+            <a href="materias.php" class="control-button">
+                <i class="bi bi-book"></i>
+                <span>Registro de Materias</span>
+            </a>
+            <a href="reportes.php" class="control-button">
+                <i class="bi bi-bar-chart"></i>
+                <span>Generación de Reportes</span>
+            </a>
+            <!-- Nuevo botón para gestionar perfiles -->
+            <a href="gestionar_perfiles.php" class="control-button">
+                <i class="bi bi-person-lines-fill"></i>
+                <span>Gestionar Perfiles</span>
+            </a>
+            <a href="administrar_periodos.php" class="control-button">
+        <i class="bi bi-calendar"></i>
+        <span>Periodos</span>
+    </a>
+            <!-- Nuevo botón para administrar sitio -->
+    <a href="administrar_sitio.php" class="control-button">
+        <i class="bi bi-gear"></i>
+        <span>Administrar Sitio</span>
+    </a>
+        </div>
+    </main>
 </body>
 </html>

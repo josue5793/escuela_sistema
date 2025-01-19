@@ -14,7 +14,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administrador</title>
-    <link rel="stylesheet" href="CSS/administrador.css">
+    <link rel="stylesheet" href="CSS/administrador_dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet"> <!-- Para los íconos -->
 </head>
 <body>
@@ -24,7 +24,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
             <h1>Panel de Administrador</h1>
             <div class="navbar-right">
                 <span>Bienvenid@: <?php echo htmlspecialchars($_SESSION['nombre']); ?></span>
-                <a href="logout.php" class="logout-button">Cerrar Sesión</a>
+                <a href="../logout.php" class="logout-button">Cerrar Sesión</a>
             </div>
         </div>
     </header>
@@ -63,20 +63,23 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
                 <i class="bi bi-bar-chart"></i>
                 <span>Generación de Reportes</span>
             </a>
-            <!-- Nuevo botón para gestionar perfiles -->
             <a href="gestionar_perfiles.php" class="control-button">
                 <i class="bi bi-person-lines-fill"></i>
                 <span>Gestionar Perfiles</span>
             </a>
             <a href="administrar_periodos.php" class="control-button">
-        <i class="bi bi-calendar"></i>
-        <span>Periodos</span>
-    </a>
-            <!-- Nuevo botón para administrar sitio -->
-    <a href="administrar_sitio.php" class="control-button">
-        <i class="bi bi-gear"></i>
-        <span>Administrar Sitio</span>
-    </a>
+                <i class="bi bi-calendar"></i>
+                <span>Periodos</span>
+            </a>
+            <a href="administrar_sitio.php" class="control-button">
+                <i class="bi bi-gear"></i>
+                <span>Administrar Sitio</span>
+            </a>
+            <!-- Nuevo botón para Asignar Directores -->
+            <a href="asignar_directores.php" class="control-button">
+                <i class="bi bi-person-workspace"></i>
+                <span>Asignar Directores</span>
+            </a>
         </div>
     </main>
 </body>
