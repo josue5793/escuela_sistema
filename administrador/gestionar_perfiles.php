@@ -1,6 +1,9 @@
+
 <?php
+//Este código presenta un error
+//revisar detalladamente
 session_start();
-require_once 'db.php';
+require_once '../db.php';
 
 // Verificar si el usuario está logueado y tiene el rol de administrador
 if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
@@ -31,7 +34,7 @@ if (isset($_GET['id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Roles</title>
-    <link rel="stylesheet" href="CSS/gestionar_roles.css">
+    <link rel="stylesheet" href="CSS/.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
@@ -50,7 +53,7 @@ if (isset($_GET['id'])) {
     <main class="main-container">
         <!-- Sección de advertencia -->
                 <div class="button-container">
-            <a href="administrador.php" class="control-button">
+            <a href="administrador_dashboard.php" class="control-button">
                 <i class="bi bi-house-door"></i> <!-- Ícono de casa -->
                 <span>Regresar al Panel de Administrador</span>
             </a>

@@ -48,10 +48,16 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
         <h1> Panel de control</h1>
         <div class="reportes-section">
                  <!-- Botón para generar el reporte en PDF -->
-            <a href="personalizar_reporte.php" class="control-button">
-            <i class="bi bi-file-earmark-pdf"></i>
-            <span>Generar reporte de usuarios del sistema en PDF</span>
-            </a>
+            <!-- En reportes.php -->
+                 <a href="generar_pdf_usuarios.php" class="control-button">
+                         <i class="bi bi-file-earmark-pdf"></i>
+                        <span>Generar reporte de usuarios del sistema en PDF</span>
+                 </a>
+                 
+                 <a href="reporte_alumnos_general.php" class="control-button">
+                         <i class="bi bi-file-earmark-pdf"></i>
+                        <span>Generar reporte de alumnos inscritos</span>
+                 </a>
 
             </div>
     </main>

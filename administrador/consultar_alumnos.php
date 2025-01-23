@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'db.php';
+require_once '../db.php';
 
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
@@ -8,9 +8,9 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
     exit;
 }
 
-// Variables para filtros
-$nivelSeleccionado = $_GET['nivel'] ?? '';
-$grupoSeleccionado = $_GET['grupo'] ?? '';
+// Variables para filtros (inicializadas con valores predeterminados)
+$nivelSeleccionado = $_GET['nivel'] ?? ''; // Valor predeterminado: cadena vacía
+$grupoSeleccionado = $_GET['grupo'] ?? ''; // Valor predeterminado: cadena vacía
 $mostrarTodos = isset($_GET['mostrar_todos']);
 $busqueda = $_GET['busqueda'] ?? '';  // Nueva variable para la búsqueda
 $result = [];
@@ -76,7 +76,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consultar Alumnos</title>
-    <link rel="stylesheet" href="CSS/consultar_alumnos.css">
+    <link rel="stylesheet" href="CSS/consultar_alumnos2.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
@@ -101,8 +101,7 @@ try {
             <i class="bi bi-person-badge"></i>
             <span>Consultar Alumnos</span>
         </a>
-        
-        <a href="administrador.php" class="control-button">
+        <a href="administrador_dashboard.php" class="control-button">
             <i class="bi bi-house-door"></i>
             <span>Panel Administrador</span>
         </a>
@@ -178,9 +177,8 @@ try {
                     </thead>
                     <tbody>
                         <?php foreach ($alumnos as $alumno): ?>
-                            <tr onclick="showModal(<?php echo htmlspecialchars(json_encode($alumno)); ?>)">
-                                
-                                <td><img src="uploads/<?php echo htmlspecialchars($alumno['foto']); ?>" alt="Foto del Alumno" width="50"></td>
+                            <tr data-alumno='<?php echo htmlspecialchars(json_encode($alumno)); ?>'>
+                                <td><img src="../uploads/<?php echo htmlspecialchars($alumno['foto']); ?>" alt="Foto del Alumno" width="50"></td>
                                 <td><?php echo htmlspecialchars($alumno['matricula']); ?></td>
                                 <td><?php echo htmlspecialchars($alumno['apellidos']); ?></td>
                                 <td><?php echo htmlspecialchars($alumno['nombres']); ?></td>
@@ -212,8 +210,8 @@ try {
             </thead>
             <tbody>
                 <?php foreach ($result as $row): ?>
-                    <tr>
-                        <td><img src="uploads/<?php echo htmlspecialchars($row['foto']); ?>" alt="Foto" width="50"></td>
+                    <tr data-alumno='<?php echo htmlspecialchars(json_encode($row)); ?>'>
+                        <td><img src="../uploads/<?php echo htmlspecialchars($row['foto']); ?>" alt="Foto" width="50"></td>
                         <td><?php echo htmlspecialchars($row['matricula']); ?></td>
                         <td><?php echo htmlspecialchars($row['apellidos']); ?></td>
                         <td><?php echo htmlspecialchars($row['nombres']); ?></td>
@@ -231,8 +229,8 @@ try {
         <p>No se encontraron resultados.</p>
     <?php endif; ?>
 </main>
+
 <!-- Modal de Detalles del Alumno -->
-<!-- Modal -->
 <div id="modal" class="modal">
     <div class="modal-content">
         <div class="modal-left">
@@ -251,10 +249,20 @@ try {
 </div>
 
 <script>
+// Event delegation para manejar clics en las filas de la tabla
+document.querySelector('tbody').addEventListener('click', function(event) {
+    const row = event.target.closest('tr');
+    if (row) {
+        const alumno = JSON.parse(row.getAttribute('data-alumno'));
+        showModal(alumno);
+    }
+});
+
 function showModal(alumno) {
-    document.getElementById("modal-student-photo").src = "uploads/" + alumno.foto;
+    document.getElementById("modal-student-photo").src = "../uploads/" + alumno.foto;
     document.getElementById("modal-student-id").textContent = alumno.matricula;
     document.getElementById("modal-student-name").textContent = alumno.nombres + " " + alumno.apellidos;
+    document.getElementById("modal-student-lastname").textContent = alumno.apellidos;
     document.getElementById("modal-student-address").textContent = alumno.direccion;
     document.getElementById("modal-student-phone").textContent = alumno.telefono;
     document.getElementById("modal-student-dob").textContent = alumno.fecha_nacimiento;
@@ -272,7 +280,6 @@ window.onclick = function(event) {
     }
 }
 </script>
-
 
 </body>
 </html>

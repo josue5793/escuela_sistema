@@ -7,7 +7,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
     exit;
 }
 
-require_once 'db.php';
+require_once '../db.php';
 
 try {
     // Obtener lista de grupos con sus niveles de la base de datos
@@ -28,7 +28,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Grupos</title>
-    <link rel="stylesheet" href="CSS/gestionar_grupos2.css">
+    <link rel="stylesheet" href="CSS/gestionar_grupos.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet"> <!-- Para los íconos -->
 </head>
 <body>
@@ -46,7 +46,7 @@ try {
     <!-- Contenedor de botones -->
     <div class="button-container">
         <!-- Botón para ir al Panel del Administrador -->
-        <a href="administrador.php" class="control-button">
+        <a href="administrador_dashboard.php" class="control-button">
             <i class="bi bi-house-door"></i> <!-- Ícono de casa -->
             <span>Panel Administrador</span>
         </a>

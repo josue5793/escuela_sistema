@@ -1,22 +1,19 @@
-CREATE DATABASE escuela_sistema;
-USE escuela_sistema;
-
 -- Tabla: alumnos
 CREATE TABLE alumnos (
     alumno_id INT(11) NOT NULL AUTO_INCREMENT,
     matricula VARCHAR(20) NOT NULL,
     nombres VARCHAR(100) NOT NULL,
-    apellidos VARCHAR(100) NOT NULL,
     direccion VARCHAR(255) DEFAULT NULL,
     telefono VARCHAR(15) DEFAULT NULL,
     grupo_id INT(11) NOT NULL,
     nivel_id INT(11) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
     fecha_nacimiento DATE DEFAULT NULL,
     foto VARCHAR(255) DEFAULT NULL,
-    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (alumno_id),
-    FOREIGN KEY (grupo_id) REFERENCES grupos(id_grupo) ON UPDATE RESTRICT ON DELETE RESTRICT,
-    FOREIGN KEY (nivel_id) REFERENCES niveles(nivel_id) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (grupo_id) REFERENCES grupos(id_grupo) ON UPDATE RESTRICT,
+    FOREIGN KEY (nivel_id) REFERENCES niveles(nivel_id) ON UPDATE CASCADE
 );
 
 -- Tabla: calificaciones
@@ -28,12 +25,25 @@ CREATE TABLE calificaciones (
     rasgo_id INT(11) NOT NULL,
     calificacion DECIMAL(5,2) NOT NULL,
     observaciones TEXT DEFAULT NULL,
-    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (calificacion_id),
     FOREIGN KEY (alumno_id) REFERENCES alumnos(alumno_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (materia_id) REFERENCES materias(materia_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (periodo_id) REFERENCES periodos(periodo_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (rasgo_id) REFERENCES rasgos(rasgo_id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+-- Tabla: directores
+CREATE TABLE directores (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    usuario_id INT(11) NOT NULL,
+    nivel_id INT(11) NOT NULL,
+    asignado_por INT(11) DEFAULT NULL,
+    fecha_asignacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    PRIMARY KEY (id),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(usuario_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (nivel_id) REFERENCES niveles(nivel_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (asignado_por) REFERENCES usuarios(usuario_id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 -- Tabla: grupos
@@ -44,6 +54,16 @@ CREATE TABLE grupos (
     turno VARCHAR(20) NOT NULL,
     PRIMARY KEY (id_grupo),
     FOREIGN KEY (nivel_id) REFERENCES niveles(nivel_id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+-- Tabla: grupo_materia
+CREATE TABLE grupo_materia (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    grupo_id INT(11) NOT NULL,
+    materia_id INT(11) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (grupo_id) REFERENCES grupos(id_grupo) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (materia_id) REFERENCES materias(materia_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Tabla: materias
@@ -63,8 +83,7 @@ CREATE TABLE materia_rasgo (
     porcentaje DECIMAL(5,2) NOT NULL,
     PRIMARY KEY (materia_rasgo_id),
     FOREIGN KEY (materia_id) REFERENCES materias(materia_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (rasgo_id) REFERENCES rasgos(rasgo_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CHECK (porcentaje > 0 AND porcentaje <= 100)
+    FOREIGN KEY (rasgo_id) REFERENCES rasgos(rasgo_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Tabla: niveles
@@ -78,7 +97,7 @@ CREATE TABLE niveles (
 CREATE TABLE pagos (
     pago_id INT(11) NOT NULL AUTO_INCREMENT,
     alumno_id INT(11) NOT NULL,
-    concepto ENUM('inscripción', 'mensualidad', 'colegiatura') NOT NULL,
+    concepto ENUM('inscripcion', 'mensualidad', 'colegiatura') NOT NULL,
     monto DECIMAL(10,2) NOT NULL,
     fecha_pago DATE NOT NULL,
     descuento DECIMAL(10,2) DEFAULT 0.00,
@@ -104,7 +123,7 @@ CREATE TABLE profesores (
     usuario_id INT(11) NOT NULL,
     especialidad VARCHAR(100) DEFAULT NULL,
     telefono VARCHAR(15) DEFAULT NULL,
-    nivel_id INT(11) NOT NULL,
+    nivel_id INT(11) DEFAULT NULL,
     foto VARCHAR(255) DEFAULT NULL,
     PRIMARY KEY (profesor_id),
     FOREIGN KEY (usuario_id) REFERENCES usuarios(usuario_id) ON UPDATE RESTRICT ON DELETE CASCADE,
@@ -144,7 +163,7 @@ CREATE TABLE roles (
     rol_id INT(11) NOT NULL AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
     descripcion TEXT DEFAULT NULL,
-    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_creacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (rol_id)
 );
 
@@ -155,16 +174,7 @@ CREATE TABLE usuarios (
     correo VARCHAR(100) NOT NULL,
     contrasena VARCHAR(255) NOT NULL,
     rol_id INT(11) DEFAULT NULL,
-    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_creacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (usuario_id),
     FOREIGN KEY (rol_id) REFERENCES roles(rol_id) ON UPDATE CASCADE ON DELETE RESTRICT
-);
--- Tabla: grupo-materia
-CREATE TABLE grupo_materia (
-    id INT(11) NOT NULL AUTO_INCREMENT,
-    grupo_id INT(11) NOT NULL,
-    materia_id INT(11) NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (grupo_id) REFERENCES grupos(id_grupo) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (materia_id) REFERENCES materias(materia_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
