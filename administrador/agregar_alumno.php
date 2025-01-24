@@ -7,7 +7,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
     exit;
 }
 
-require_once 'db.php';
+require_once '../db.php';
 
 // Función para generar matrícula
 function generarMatricula($pdo) {
@@ -78,10 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consultar Alumnos</title>
-    <link rel="stylesheet" href="CSS/agregar_alumno2.css">
+    <title>Agregar Alumno</title>
+    <link rel="stylesheet" href="CSS/agregar_alumno.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-   
 </head>
 <body>
 <header class="navbar">
@@ -89,16 +88,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h1>Agregar un alumno nuevo</h1>
         <div class="navbar-right">
             <span>Bienvenid@: <?php echo htmlspecialchars($_SESSION['nombre']); ?></span>
-            <a href="logout.php" class="logout-button">Cerrar Sesión</a>
+            <a href="../logout.php" class="logout-button">Cerrar Sesión</a>
         </div>
     </div>
 </header>
 <main class="main-container">
-      <main class="main-container">
     <!-- Sección de bienvenida -->
     <section class="welcome-section">
-        <h2>Administracion de alumnos</h2>
-        <p>Desde aquí puedes gestionar la informacion de cada alumno.</p>
+        <h2>Administración de alumnos</h2>
+        <p>Desde aquí puedes gestionar la información de cada alumno.</p>
     </section>
 
     <!-- Botones de control -->
@@ -111,13 +109,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <i class="bi bi-person-badge"></i>
             <span>Consultar Alumnos</span>
         </a>
-        
-        <a href="administrador.php" class="control-button">
+        <a href="administrador_dashboard.php" class="control-button">
             <i class="bi bi-house-door"></i>
             <span>Panel Administrador</span>
         </a>
     </div>
-</main>
+
     <h1>Registrar Alumno</h1>
     <form action="" method="POST" enctype="multipart/form-data">
         <label for="nombres">Nombres:</label>
@@ -167,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         grupoSelect.innerHTML = ''; // Limpiar los grupos actuales
 
         // Realizar una petición AJAX para obtener los grupos del nivel seleccionado
-        fetch('get_grupos.php?nivel_id=' + nivelId)
+        fetch('obtener_grados.php?nivel_id=' + nivelId)
             .then(response => response.json())
             .then(data => {
                 console.log(data); // Verifica lo que llega del servidor en la consola
@@ -199,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Ejecutar el cambio inicial para cargar los grupos del primer nivel
     document.getElementById('nivel_id').dispatchEvent(new Event('change'));
-</script>
-
+    </script>
+</main>
 </body>
 </html>

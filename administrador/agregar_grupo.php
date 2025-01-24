@@ -8,7 +8,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
 }
 
 // Incluir la conexión a la base de datos
-require_once 'db.php';
+require_once '../db.php';
 
 // Inicializar variables
 $errores = [];
@@ -61,7 +61,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Nuevo Grupo</title>
-    <link rel="stylesheet" href="css/agregar_grupo2.css">
+    <link rel="stylesheet" href="css/agregar_grupo.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet"> <!-- Para los íconos -->
 </head>
 <body>
@@ -71,7 +71,7 @@ try {
             <h1>Agregar Nuevo Grupo</h1>
             <div class="navbar-right">
                 <span>Administrador: <?php echo htmlspecialchars($_SESSION['nombre']); ?></span>
-                <a href="logout.php" class="logout-button">Cerrar Sesión</a>
+                <a href="../logout.php" class="logout-button">Cerrar Sesión</a>
             </div>
         </div>
     </header>
@@ -82,9 +82,12 @@ try {
     <!-- Contenedor Principal -->
     <main class="main-container">
     <div class="admin-panel-button-container">
-        <a href="administrador.php" class="admin-panel-button">
-            <i class="bi bi-house-door"></i> Panel del Administrador
+                <a href="administrador_dashboard.php" class="control-button">
+            <i class="bi bi-house-door"></i> <!-- Ícono de casa -->
+            <span>Panel Administrador</span>
         </a>
+
+
     </div>
         <div class="form-container">
             <h2>Formulario para Agregar Nuevo Grupo</h2>

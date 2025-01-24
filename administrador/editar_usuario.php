@@ -7,7 +7,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
     exit;
 }
 
-require_once 'db.php';
+require_once '../db.php';
 
 // Verificar si se ha recibido el ID del usuario a editar
 if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
@@ -102,7 +102,7 @@ try {
             <h1>Gestión de Usuarios</h1>
             <div class="navbar-right">
                 <span>Administrador: <?php echo htmlspecialchars($_SESSION['nombre']); ?></span>
-                <a href="logout.php" class="logout-button">Cerrar Sesión</a>
+                <a href="../logout.php" class="logout-button">Cerrar Sesión</a>
             </div>
         </div>
     </header>
@@ -114,15 +114,17 @@ try {
 
         <!-- Botones de control -->
         <div class="button-container">
-            <a href="agregar_usuario.php" class="control-button">
+        <a href="administrador_dashboard.php" class="control-button">
+                <i class="bi bi-house-door"></i> <!-- Ícono de casa -->
+                <span>Panel Administrador</span>
+            </a>
+        
+        <a href="agregar_usuario.php" class="control-button">
                 <i class="bi bi-person-plus"></i>
                 <span>Agregar Usuario</span>
             </a>
             <!-- Botón para ir al Panel de Administrador -->
-            <a href="administrador.php" class="control-button">
-                <i class="bi bi-house-door"></i> <!-- Ícono de casa -->
-                <span>Panel Administrador</span>
-            </a>
+           
             <a href="gestionar_usuarios.php" class="control-button">
                 <i class="bi bi-people"></i> <!-- Ícono de casa -->
                 <span>Gestionar Usuario</span>

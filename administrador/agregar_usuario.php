@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h1>Agregar Nuevo Usuario</h1>
             <div class="navbar-right">
                 <span>Administrador: <?php echo htmlspecialchars($_SESSION['nombre']); ?></span>
-                <a href="logout.php" class="logout-button">Cerrar Sesión</a>
+                <a href="../logout.php" class="logout-button">Cerrar Sesión</a>
             </div>
         </div>
     </header>

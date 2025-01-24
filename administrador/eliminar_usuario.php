@@ -8,7 +8,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
 }
 
 // Incluir la conexión a la base de datos
-require_once 'db.php';
+require_once '../db.php';
 
 // Verificar si se ha recibido el ID del usuario a eliminar
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {

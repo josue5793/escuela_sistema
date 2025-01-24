@@ -86,7 +86,7 @@ try {
         <h1>Consultar Alumnos</h1>
         <div class="navbar-right">
             <span>Bienvenid@: <?php echo htmlspecialchars($_SESSION['nombre']); ?></span>
-            <a href="logout.php" class="logout-button">Cerrar Sesión</a>
+            <a href="../logout.php" class="logout-button">Cerrar Sesión</a>
         </div>
     </div>
 </header>

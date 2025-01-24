@@ -44,7 +44,7 @@ if (isset($_GET['id'])) {
             <h1>Gestión de Roles</h1>
             <div class="navbar-right">
                 <span>Administrador: <?php echo htmlspecialchars($_SESSION['nombre']); ?></span>
-                <a href="logout.php" class="logout-button">Cerrar Sesión</a>
+                <a href="../logout.php" class="logout-button">Cerrar Sesión</a>
             </div>
         </div>
     </header>
