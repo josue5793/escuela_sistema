@@ -1,0 +1,165 @@
+/* Estilo General */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f8ff; /* Azul claro */
+    color: #003f7f; /* Azul oscuro */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Contenedor Principal */
+.container {
+    flex: 1; /* Asegura que el contenido principal ocupe todo el espacio disponible */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Logo y Encabezado */
+.logo-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    width: 50%; /* Ocupa la mitad izquierda */
+}
+
+.logo {
+    width: 200px;
+    height: auto;
+    border-radius: 15%;
+    border: 3px solid #00aaff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo-header h1 {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.logo-header p {
+    font-size: 1rem;
+    margin: 0;
+    color: #555;
+}
+
+/* Caja de Login */
+.login-box {
+    width: 35%;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-box h2 {
+    font-size: 1.8rem;
+    color: #003f7f;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.login-box label {
+    font-size: 1rem;
+    color: #003f7f;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.login-box input[type="email"],
+.login-box input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.login-box button {
+    width: 100%;
+    padding: 12px;
+    background-color: #00aaff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.login-box button:hover {
+    background-color: #0077cc;
+    transform: translateY(-3px);
+}
+
+.login-box i {
+    font-size: 1.2rem;
+    color: #00aaff;
+}
+
+/* Botón para regresar a inicio */
+.back-button {
+    margin-top: 10px;
+    color: #003f7f;
+    text-decoration: none;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.3s, transform 0.3s;
+}
+
+.back-button:hover {
+    color: #0077cc;
+    transform: translateX(-5px);
+}
+
+/* Pie de Página */
+footer {
+    background-color: #003f7f;
+    color: #ffffff;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.9rem;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+footer a {
+    color: #00aaff;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Estilo Responsivo */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .logo-header {
+        align-items: center;
+        width: 100%;
+    }
+
+    .login-box {
+        width: 90%;
+    }
+}
