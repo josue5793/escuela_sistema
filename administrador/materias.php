@@ -98,7 +98,7 @@ try {
         </section>
 
         <div class="button-container">
-            <a href="administrador.php" class="control-button">
+            <a href="administrador_dashboard.php" class="control-button">
                 <i class="bi bi-house-door"></i>
                 <span>Panel Administrador</span>
             </a>
