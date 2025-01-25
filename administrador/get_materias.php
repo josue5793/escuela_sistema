@@ -1,5 +1,5 @@
 <?php
-require 'db.php'; // Asegúrate de que este archivo tiene la conexión PDO
+require '../db.php'; // Asegúrate de que este archivo tiene la conexión PDO
 
 $nivel_id = $_GET['nivel_id'] ?? null;
 

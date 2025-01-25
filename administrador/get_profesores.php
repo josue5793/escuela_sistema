@@ -1,5 +1,5 @@
 <?php
-require 'db.php'; // Se incluye el archivo con la conexión PDO
+require '../db.php'; // Se incluye el archivo con la conexión PDO
 
 $nivel_id = $_GET['nivel_id'] ?? null; // Obtener el nivel_id de la solicitud GET
 

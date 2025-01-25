@@ -1,5 +1,5 @@
 <?php
-include('db.php');
+include('../db.php');
 session_start();
 
 if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['asignar_nivel'])) {
 <main class="main-container">  
     <h1>Asignar Niveles</h1>
     <div class="button-container">
-        <a href="administrador.php" class="control-button">
+        <a href="administrador_dashboard.php" class="control-button">
             <i class="bi bi-house-door"></i>
             <span>Regresar</span>
         </a>

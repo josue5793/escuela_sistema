@@ -24,7 +24,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador' && $
             <h1>Gestionar Profesores</h1>
             <div class="navbar-right">
                 <span>Bienvenid@: <?php echo htmlspecialchars($_SESSION['nombre']); ?></span>
-                <a href="logout.php" class="logout-button">Cerrar Sesión</a>
+                <a href="../logout.php" class="logout-button">Cerrar Sesión</a>
             </div>
         </div>
     </header>
@@ -40,7 +40,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador' && $
         <!-- Botones de control -->
         <div class="button-container">
             <!-- Botón para regresar al panel de administrador -->
-            <a href="administrador.php" class="control-button">
+            <a href="administrador_dashboard.php" class="control-button">
                 <i class="bi bi-house-door"></i>
                 <span>Regresar al panel de administrador</span>
             </a>

@@ -2,13 +2,13 @@
 session_start();
 
 // Verificar si el usuario está logueado y tiene el rol de administrador
-if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'director') {
+if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
     header("Location: login.php");
     exit;
 }
 
 // Conexión a la base de datos
-require 'db.php'; // Asegúrate de que este archivo contenga la conexión PDO adecuada
+require '../db.php'; // Asegúrate de que este archivo contenga la conexión PDO adecuada
 
 // Inicializar mensaje de éxito o error
 $mensaje = "";
@@ -87,7 +87,7 @@ try {
                 <h1>Agregar Materias</h1>
                 <div class="navbar-right">
                     <span>Bienvenid@: <?php echo htmlspecialchars($_SESSION['nombre']); ?></span>
-                    <a href="logout.php" class="logout-button">Cerrar Sesión</a>
+                    <a href="../logout.php" class="logout-button">Cerrar Sesión</a>
                 </div>
             </div>
         </header>
@@ -98,15 +98,16 @@ try {
         </section>
 
         <div class="button-container">
-        <a href="administrador.php" class="control-button">
-            <i class="bi bi-house-door"></i>
-            <span>Panel Administrador</span>
-        </a>
-        <a href="asignar_materias_alumnos.php" class="control-button">
-            <i class="bi bi-person"></i>
-            <span>Asignar materias a grupos</span>
-        </a>
-</div>
+            <a href="administrador.php" class="control-button">
+                <i class="bi bi-house-door"></i>
+                <span>Panel Administrador</span>
+            </a>
+            <a href="asignar_materias_alumnos.php" class="control-button">
+                <i class="bi bi-person"></i>
+                <span>Asignar materias a grupos</span>
+            </a>
+        </div>
+
         <h1>Alta de Materias</h1>
 
         <!-- Formulario de registro -->
@@ -118,7 +119,7 @@ try {
             <select id="nivel_id" name="nivel_id" required>
                 <option value="">Selecciona un nivel</option>
                 <?php foreach ($niveles_result as $nivel): ?>
-                    <option value="<?php echo $nivel['nivel_id']; ?>" <?php echo ($nivel['nivel_id'] == $nivel_filtrado) ? 'selected' : ''; ?>>
+                    <option value="<?php echo $nivel['nivel_id']; ?>">
                         <?php echo htmlspecialchars($nivel['nivel_nombre']); ?>
                     </option>
                 <?php endforeach; ?>

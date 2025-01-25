@@ -8,7 +8,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
 }
 
 // Conexión a la base de datos
-require 'db.php';
+require '../db.php';
 
 // Inicializar mensaje
 $mensaje = "";
@@ -101,7 +101,7 @@ $periodos = $pdo->query($query_periodos)->fetchAll(PDO::FETCH_ASSOC);
         <a href="logout.php">Cerrar Sesión</a>
     </header>
     <div class="button-container">
-        <a href="administrador.php" class="control-button">
+        <a href="administrador_dashboard.php" class="control-button">
             <i class="bi bi-house-door"></i>
             <span>Regresar</span>
         </a>

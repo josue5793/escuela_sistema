@@ -1,5 +1,5 @@
 <?php
-include('db.php');
+include('../db.php');
 session_start();
 
 // Verificar si el usuario está logueado y tiene el rol de administrador o director
@@ -33,7 +33,7 @@ $result_profesores = $stmt_profesores->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consulta de Profesores</title>
-    <link rel="stylesheet" href="css/consulta_profesores2.css">
+    <link rel="stylesheet" href="css/consulta_profesores.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -44,14 +44,14 @@ $result_profesores = $stmt_profesores->fetchAll(PDO::FETCH_ASSOC);
             <h1>Consulta de Profesores</h1>
             <div class="navbar-right">
                 <span>Bienvenid@: <?php echo htmlspecialchars($_SESSION['nombre'] ?? ''); ?></span>
-                <a href="logout.php" class="logout-button">Cerrar Sesión</a>
+                <a href="../logout.php" class="logout-button">Cerrar Sesión</a>
             </div>
         </div>
     </header>
 
     <!-- Botones de control -->
     <div class="button-container">
-        <a href="administrador.php" class="control-button">
+        <a href="administrador_dashboard.php" class="control-button">
             <i class="bi bi-house-door"></i>
             <span>Regresar al panel de administrador</span>
         </a>
@@ -158,6 +158,46 @@ $result_profesores = $stmt_profesores->fetchAll(PDO::FETCH_ASSOC);
                 modal.style.display = "none";
             }
         }
+
+        // Enviar formulario de edición
+        $('#form-editar').on('submit', function(event) {
+            event.preventDefault(); // Evitar el envío tradicional del formulario
+
+            var profesorId = $('#profesor_id').val();
+            var especialidad = $('#especialidad').val();
+            var telefono = $('#telefono').val();
+
+            // Validar que los campos no estén vacíos
+            if (!especialidad || !telefono) {
+                alert('Todos los campos son obligatorios.');
+                return;
+            }
+
+            // Validar el formato del teléfono
+            if (!/^\d{10}$/.test(telefono)) {
+                alert('El teléfono debe contener 10 dígitos.');
+                return;
+            }
+
+            // Enviar los datos al servidor mediante AJAX
+            $.ajax({
+                url: 'actualizar_profesor.php', // Página que procesa la actualización
+                method: 'POST',
+                data: {
+                    profesor_id: profesorId,
+                    especialidad: especialidad,
+                    telefono: telefono
+                },
+                success: function(response) {
+                    alert('Profesor actualizado correctamente.');
+                    modal.style.display = "none";
+                    location.reload(); // Recargar la página para ver los cambios
+                },
+                error: function() {
+                    alert('Error al actualizar el profesor.');
+                }
+            });
+        });
     </script>
 </body>
 </html>
