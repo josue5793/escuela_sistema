@@ -7,7 +7,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
     exit;
 }
 
-require 'db.php'; // Conexión a la base de datos
+require '../db.php'; // Conexión a la base de datos
 
 $mensaje = "";
 
@@ -97,8 +97,10 @@ foreach ($asignaciones as $asignacion) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asignar Materias a Grupos</title>
-    <link rel="stylesheet" href="CSS/asignar_materias_a_grupos.css">
+    <link rel="stylesheet" href="CSS/asignar_materias_grupos.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet"> <!-- Para los íconos -->
+
     <script>
         $(document).ready(function() {
             // Filtrar materias asignadas
@@ -118,14 +120,68 @@ foreach ($asignaciones as $asignacion) {
                     $(this).toggle(visible);
                 });
             });
+
+            // Cargar grupos y materias al seleccionar un nivel
+            $('#nivel_id').on('change', function() {
+                var nivelId = $(this).val();
+                if (nivelId) {
+                    // Cargar grupos
+                    $.ajax({
+                        url: 'cargar_grupos.php',
+                        type: 'GET',
+                        data: { nivel_id: nivelId },
+                        success: function(response) {
+                            $('#grupo_id').html(response);
+                        }
+                    });
+
+                    // Cargar materias
+                    $.ajax({
+                        url: 'cargar_materias.php',
+                        type: 'GET',
+                        data: { nivel_id: nivelId },
+                        success: function(response) {
+                            $('#materia_id').html(response);
+                        }
+                    });
+                } else {
+                    // Limpiar los menús si no se selecciona un nivel
+                    $('#grupo_id').html('<option value="">Selecciona un grupo</option>');
+                    $('#materia_id').html('<option value="">Selecciona una materia</option>');
+                }
+            });
         });
     </script>
 </head>
 <body>
+<header class="navbar">
+        <div class="navbar-container">
+            <h1>Asignar Materias a grupos</h1>
+            <div class="navbar-right">
+                <span>Bienvenid@: <?php echo htmlspecialchars($_SESSION['nombre']); ?></span>
+                <a href="../logout.php" class="logout-button">Cerrar Sesión</a>
+            </div>
+        </div>
+    </header>
     <main class="main-container">
         <header>
             <h1>Asignar Materias a Grupos</h1>
         </header>
+        <section class="welcome-section">
+            <h2>Asignar materias a los grados y niveles correspondientes</h2>
+            <p>Consulta y actualiza la información de las materias</p>
+        </section>
+
+        <div class="button-container">
+            <a href="administrador_dashboard.php" class="control-button">
+                <i class="bi bi-house-door"></i>
+                <span>Panel Administrador</span>
+            </a>
+            <a href="asignar_materias_grupos.php" class="control-button">
+                <i class="bi bi-person"></i>
+                <span>Asignar materias a grupos</span>
+            </a>
+        </div>
 
         <section>
             <form action="" method="POST">

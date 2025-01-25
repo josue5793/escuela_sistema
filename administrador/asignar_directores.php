@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'db.php'; // Conexión a la base de datos
+require '../db.php'; // Conexión a la base de datos
 
 // Verificar si el usuario está autenticado y es administrador
 if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asignar Directores</title>
-    <link rel="stylesheet" href="CSS/administrador.css">
+    <link rel="stylesheet" href="CSS/asignar_directores.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="navbar-container">
             <h1>Asignar Directores</h1>
             <div class="navbar-right">
-                <a href="administrador.php" class="back-button">Volver al Panel</a>
+                <a href="administrador_dashboard.php" class="back-button">Volver al Panel</a>
                 <a href="logout.php" class="logout-button">Cerrar Sesión</a>
             </div>
         </div>

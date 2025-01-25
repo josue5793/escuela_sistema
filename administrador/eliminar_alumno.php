@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'db.php';  // Incluir el archivo de conexión correctamente
+include '../db.php';  // Incluir el archivo de conexión correctamente
 
 // Verificar si el usuario está logueado y tiene permisos
 if (!isset($_SESSION['usuario_id']) || !in_array($_SESSION['rol'], ['administrador', 'director'])) {

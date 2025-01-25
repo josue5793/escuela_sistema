@@ -3,7 +3,7 @@ session_start();
 
 // Verificar si el usuario está logueado y tiene el rol de administrador
 if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit;
 }
 
@@ -49,8 +49,10 @@ try {
     die("Error al obtener los niveles: " . htmlspecialchars($e->getMessage()));
 }
 
-// Procesar la búsqueda por nivel
+// Procesar la búsqueda por nivel y nombre de materia
 $nivel_filtrado = $_GET['nivel_id'] ?? ''; // Obtener el nivel seleccionado para filtrar
+$nombre_filtrado = $_GET['nombre_materia'] ?? ''; // Obtener el nombre de la materia para filtrar
+
 $query = "SELECT m.materia_id, m.nombre, n.nivel_nombre 
           FROM materias m 
           JOIN niveles n ON m.nivel_id = n.nivel_id";
@@ -59,6 +61,11 @@ $params = [];
 if (!empty($nivel_filtrado)) {
     $query .= " WHERE m.nivel_id = :nivel_id";
     $params[':nivel_id'] = $nivel_filtrado;
+}
+
+if (!empty($nombre_filtrado)) {
+    $query .= (empty($params) ? " WHERE" : " AND") . " m.nombre LIKE :nombre";
+    $params[':nombre'] = "%$nombre_filtrado%";
 }
 
 // Obtener las materias registradas con el filtro si aplica
@@ -102,7 +109,7 @@ try {
                 <i class="bi bi-house-door"></i>
                 <span>Panel Administrador</span>
             </a>
-            <a href="asignar_materias_alumnos.php" class="control-button">
+            <a href="asignar_materias_grupos.php" class="control-button">
                 <i class="bi bi-person"></i>
                 <span>Asignar materias a grupos</span>
             </a>
@@ -132,17 +139,25 @@ try {
             <p class="mensaje"><?php echo htmlspecialchars($mensaje); ?></p>
         <?php endif; ?>
 
-        <h2>Filtrar por Nivel</h2>
+        <h2>Buscar Materias</h2>
         <form action="" method="GET" class="formulario">
+            <label for="nombre_materia">Nombre de la Materia:</label>
+            <input type="text" id="nombre_materia" name="nombre_materia" 
+                   value="<?php echo htmlspecialchars($nombre_filtrado); ?>" 
+                   placeholder="Buscar por nombre de materia">
+
             <label for="nivel_id">Seleccionar Nivel:</label>
             <select id="nivel_id" name="nivel_id" onchange="this.form.submit()">
                 <option value="">Selecciona un nivel</option>
                 <?php foreach ($niveles_result as $nivel): ?>
-                    <option value="<?php echo $nivel['nivel_id']; ?>" <?php echo ($nivel['nivel_id'] == $nivel_filtrado) ? 'selected' : ''; ?>>
+                    <option value="<?php echo $nivel['nivel_id']; ?>" 
+                        <?php echo ($nivel['nivel_id'] == $nivel_filtrado) ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($nivel['nivel_nombre']); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
+
+            <button type="submit">Buscar</button>
         </form>
 
         <h2>Materias Registradas</h2>
