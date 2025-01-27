@@ -109,10 +109,7 @@ try {
                 <i class="bi bi-house-door"></i>
                 <span>Panel Administrador</span>
             </a>
-            <a href="asignar_materias_grupos.php" class="control-button">
-                <i class="bi bi-person"></i>
-                <span>Asignar materias a grupos</span>
-            </a>
+            
         </div>
 
         <h1>Alta de Materias</h1>

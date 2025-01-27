@@ -43,7 +43,7 @@ if (isset($_GET['id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Roles</title>
-    <link rel="stylesheet" href="CSS/styles.css"> <!-- Asegúrate de que este archivo exista -->
+    <link rel="stylesheet" href="CSS/gestionar_perfiles.css"> <!-- Asegúrate de que este archivo exista -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>

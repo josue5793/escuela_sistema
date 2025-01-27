@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         exit;
                     } elseif ($rol === 'director') {
                         $_SESSION['success'] = "Bienvenido, $nombre. Eres Director.";
-                        header("Location: director\director.php");
+                        header("Location: director\dashboard_director.php");
                         exit;
                     } else {
                         $_SESSION['error'] = "Rol no reconocido.";

@@ -37,17 +37,14 @@ body {
 .navbar-right {
     display: flex;
     align-items: center;
+    gap: 1rem;
 }
 
-.navbar-right span {
-    margin-right: 1rem;
-    font-size: 1rem;
-}
-
+.back-button,
 .logout-button {
     text-decoration: none;
     color: #ecf0f1;
-    background-color: #e74c3c;
+    background-color: #2980b9;
     padding: 0.5rem 1rem;
     border-radius: 4px;
     font-weight: 500;
@@ -56,8 +53,9 @@ body {
     cursor: pointer;
 }
 
+.back-button:hover,
 .logout-button:hover {
-    background-color: #c0392b;
+    background-color: #1f6393;
 }
 
 /* Contenido principal */
@@ -70,83 +68,109 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.welcome-section {
-    text-align: center;
+/* Sección del formulario */
+.form-section {
     margin-bottom: 2rem;
 }
 
-.welcome-section h2 {
-    font-size: 2.2rem;
-    margin-bottom: 0.5rem;
+.form-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
     color: #2980b9;
 }
 
-.welcome-section p {
-    font-size: 1rem;
+.form-section label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
     color: #555;
 }
 
-/* Botones de control */
-.button-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1rem;
+.form-section select,
+.form-section button {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    color: #444;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-.control-button {
-    text-decoration: none;
+.form-section select:focus,
+.form-section button:focus {
+    border-color: #2980b9;
+    outline: none;
+}
+
+.form-section button {
     background-color: #2980b9;
     color: #ffffff;
-    padding: 1.5rem;
-    text-align: center;
-    border-radius: 6px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-size: 1rem;
-    font-weight: 500;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-.control-button:hover {
-    background-color: #1f6393;
-    transform: translateY(-5px);
-}
-
-.control-button i {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.control-button span {
-    font-size: 1rem;
     font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-/* Tablas */
-.table {
+.form-section button:hover {
+    background-color: #1f6393;
+    transform: translateY(-2px);
+}
+
+/* Mensajes de error y éxito */
+.error-message {
+    background-color: #e74c3c;
+    color: #ffffff;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.success-message {
+    background-color: #2ecc71;
+    color: #ffffff;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    text-align: center;
+}
+
+/* Sección de la tabla */
+.table-section {
+    margin-top: 2rem;
+}
+
+.table-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #2980b9;
+}
+
+table {
     width: 100%;
     border-collapse: collapse;
-    margin: 2rem 0;
-    font-size: 1rem;
-    text-align: left;
     background-color: #ffffff;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.table th,
-.table td {
+table th,
+table td {
     padding: 1rem;
     border-bottom: 1px solid #e0e0e0;
+    text-align: left;
 }
 
-.table th {
+table th {
     background-color: #2980b9;
     color: #ffffff;
     font-weight: bold;
 }
 
-.table tr:hover {
+table tr:hover {
     background-color: #f4f8fb;
 }
 
@@ -156,53 +180,24 @@ body {
         font-size: 1.5rem;
     }
 
+    .back-button,
     .logout-button {
         padding: 0.4rem 0.8rem;
         font-size: 0.9rem;
     }
 
-    .welcome-section h2 {
-        font-size: 1.8rem;
+    .form-section h2,
+    .table-section h2 {
+        font-size: 1.5rem;
     }
 
-    .welcome-section p {
+    .form-section select,
+    .form-section button {
         font-size: 0.9rem;
     }
 
-    .button-container {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    table th,
+    table td {
+        padding: 0.75rem;
     }
-}
-
-/* Estilos para los botones de control */
-.control-button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    margin: 10px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-    text-align: center;
-    text-decoration: none;
-    color: #333;
-    transition: all 0.3s ease;
-}
-
-.control-button:hover {
-    background-color: #007bff;
-    color: #fff;
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.control-button i {
-    font-size: 2rem;
-    margin-bottom: 10px;
-}
-
-.control-button span {
-    font-size: 1rem;
 }

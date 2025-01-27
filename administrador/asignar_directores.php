@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h1>Asignar Directores</h1>
             <div class="navbar-right">
                 <a href="administrador_dashboard.php" class="back-button">Volver al Panel</a>
-                <a href="logout.php" class="logout-button">Cerrar Sesión</a>
+                <a href="../logout.php" class="logout-button">Cerrar Sesión</a>
             </div>
         </div>
     </header>
