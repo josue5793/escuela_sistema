@@ -13,35 +13,12 @@ $nombre_director = $_SESSION['nombre'];
 // Incluir la conexión a la base de datos
 require_once '../db.php';
 
-// Obtener el nivel_id del director
-try {
-    $stmt = $pdo->prepare("SELECT d.nivel_id, n.nivel_nombre 
-                           FROM directores d 
-                           JOIN niveles n ON d.nivel_id = n.nivel_id 
-                           WHERE d.usuario_id = :usuario_id");
-    $stmt->execute([':usuario_id' => $_SESSION['usuario_id']]);
-    $director = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$director) {
-        throw new Exception("El director no está asignado a un nivel.");
-    }
-
-    $nivel_id_director = $director['nivel_id'];
-    $nivel_nombre_director = $director['nivel_nombre'];
-} catch (PDOException $e) {
-    die("Error al obtener el nivel del director: " . $e->getMessage());
-} catch (Exception $e) {
-    die($e->getMessage());
-}
-
-// Obtener la lista de profesores asignados al nivel del director
+// Obtener la lista de todos los profesores
 try {
     $stmt = $pdo->prepare("SELECT p.profesor_id, u.nombre, u.correo, p.especialidad, p.telefono 
                            FROM profesores p 
-                           JOIN usuarios u ON p.usuario_id = u.usuario_id 
-                           JOIN profesor_nivel pn ON p.profesor_id = pn.profesor_id 
-                           WHERE pn.nivel_id = :nivel_id");
-    $stmt->execute([':nivel_id' => $nivel_id_director]);
+                           JOIN usuarios u ON p.usuario_id = u.usuario_id");
+    $stmt->execute();
     $profesores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Error al obtener la lista de profesores: " . $e->getMessage());
@@ -71,7 +48,7 @@ try {
 
     <!-- Cuerpo del documento -->
     <main class="main-container">
-        <h1>Consultar Profesores del Nivel: <?php echo htmlspecialchars($nivel_nombre_director); ?></h1>
+        <h1>Consultar Profesores</h1>
 
         <!-- Mostrar mensajes de éxito o error -->
         <?php if (isset($mensaje)): ?>
@@ -83,17 +60,17 @@ try {
 
         <!-- Control de navegación -->
         <div class="button-container">
-        <a href="dashboard_director.php" class="control-button">
+            <a href="dashboard_director.php" class="control-button">
                 <i class="bi bi-house-door"></i>
                 <span>Panel principal</span>
             </a>   
-        <a href="gestion_usuarios.php" class="control-button">
+            <a href="gestion_usuarios.php" class="control-button">
                 <i class="bi bi-person-plus"></i>
                 <span>Agregar Profesor</span>
             </a>
             <a href="consultar_profesores.php" class="control-button">
                 <i class="bi bi-people"></i>
-                <span>Consultar Profesores del Nivel</span>
+                <span>Consultar Profesores</span>
             </a>
             <a href="editar_profesor.php" class="control-button">
                 <i class="bi bi-pencil-square"></i>
@@ -109,6 +86,7 @@ try {
                     <th>Correo Electrónico</th>
                     <th>Especialidad</th>
                     <th>Teléfono</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -119,11 +97,21 @@ try {
                             <td><?php echo htmlspecialchars($profesor['correo']); ?></td>
                             <td><?php echo htmlspecialchars($profesor['especialidad']); ?></td>
                             <td><?php echo htmlspecialchars($profesor['telefono']); ?></td>
+                            <td>
+                                <!-- Botón Editar -->
+                                <a href="editar_profesor.php?profesor_id=<?php echo $profesor['profesor_id']; ?>" class="btn-editar">
+                                    <i class="bi bi-pencil-square"></i> Editar
+                                </a>
+                                <!-- Botón Eliminar -->
+                                <a href="eliminar_profesor.php?profesor_id=<?php echo $profesor['profesor_id']; ?>" class="btn-eliminar" onclick="return confirm('¿Estás seguro de que deseas eliminar este profesor?');">
+                                    <i class="bi bi-trash"></i> Eliminar
+                                </a>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="4" class="no-data">No hay profesores registrados en este nivel.</td>
+                        <td colspan="5" class="no-data">No hay profesores registrados.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>

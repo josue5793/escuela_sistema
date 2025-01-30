@@ -18,9 +18,17 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.navbar-left span {
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.navbar-container h1 {
     font-size: 1.5rem;
     font-weight: bold;
+    margin: 0;
 }
 
 .navbar-right {
@@ -31,6 +39,7 @@ body {
 
 .navbar-right span {
     font-size: 1rem;
+    margin-right: 1rem; /* Espacio entre el nombre y el botón */
 }
 
 .logout-button {
@@ -64,8 +73,8 @@ h1 {
 
 /* Botones de opciones */
 .button-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    display: flex;
+    justify-content: center;
     gap: 1.5rem;
     margin-bottom: 2rem;
 }
@@ -98,52 +107,41 @@ h1 {
     transform: translateY(-5px);
 }
 
-/* Formulario */
-form {
+/* Formulario de filtrado */
+.filter-form {
     background-color: #fff;
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: 0 auto;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
 }
 
-.form-group {
-    margin-bottom: 1.5rem;
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.form-group label {
-    display: block;
+.filter-group label {
     font-size: 1rem;
-    margin-bottom: 0.5rem;
     color: #555;
 }
 
-.form-group input {
-    width: 100%;
-    padding: 0.75rem;
+.filter-group select {
+    padding: 0.5rem;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
     color: #333;
 }
 
-.form-group input:read-only {
-    background-color: #f9f9f9;
-    cursor: not-allowed;
-}
-
-.form-group small {
-    display: block;
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
-    color: #777;
-}
-
-.btn {
+.filter-button {
     background-color: #3498db;
     color: #fff;
-    padding: 0.75rem 1.5rem;
+    padding: 0.5rem 1rem;
     border: none;
     border-radius: 4px;
     font-size: 1rem;
@@ -151,8 +149,53 @@ form {
     transition: background-color 0.3s ease;
 }
 
-.btn:hover {
+.filter-button:hover {
     background-color: #2980b9;
+}
+
+/* Tabla de grupos */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+table th,
+table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #3498db;
+    color: #fff;
+    font-weight: bold;
+}
+
+table tbody tr:hover {
+    background-color: #f4f7f6;
+}
+
+.action-button {
+    color: #3498db;
+    text-decoration: none;
+    margin-right: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.action-button.edit:hover {
+    color: #2980b9;
+}
+
+.action-button.delete {
+    color: #e74c3c;
+}
+
+.action-button.delete:hover {
+    color: #c0392b;
 }
 
 /* Mensajes de alerta */
@@ -188,75 +231,4 @@ form {
 
 .footer span {
     font-size: 1rem;
-}
-
-/* Estilos para la tabla de profesores */
-.profesores-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1.5rem;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.profesores-table th,
-.profesores-table td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-.profesores-table th {
-    background-color: #3498db;
-    color: #fff;
-    font-weight: bold;
-}
-
-.profesores-table tbody tr:hover {
-    background-color: #f4f7f6;
-}
-
-.no-data {
-    text-align: center;
-    color: #777;
-    font-style: italic;
-}
-.form-editar-profesor {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.btn-guardar {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.btn-guardar:hover {
-    background-color: #45a049;
 }

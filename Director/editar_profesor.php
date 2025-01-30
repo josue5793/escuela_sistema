@@ -7,19 +7,18 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'director') {
     exit;
 }
 
-// Obtener el nombre del director desde la sesión
-$nombre_director = $_SESSION['nombre'];
-
 // Incluir la conexión a la base de datos
 require_once '../db.php';
 
-// Obtener el ID del profesor a editar desde la URL
-if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    die("ID de profesor no válido.");
+// Obtener el profesor_id desde la URL
+if (!isset($_GET['profesor_id'])) {
+    header("Location: consultar_profesores.php");
+    exit;
 }
-$profesor_id = $_GET['id'];
 
-// Obtener los datos actuales del profesor
+$profesor_id = $_GET['profesor_id'];
+
+// Obtener los datos del profesor
 try {
     $stmt = $pdo->prepare("SELECT p.profesor_id, u.nombre, u.correo, p.especialidad, p.telefono 
                            FROM profesores p 
@@ -29,10 +28,12 @@ try {
     $profesor = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$profesor) {
-        die("Profesor no encontrado.");
+        throw new Exception("Profesor no encontrado.");
     }
 } catch (PDOException $e) {
     die("Error al obtener los datos del profesor: " . $e->getMessage());
+} catch (Exception $e) {
+    die($e->getMessage());
 }
 
 // Procesar el formulario de edición
@@ -43,29 +44,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $telefono = $_POST['telefono'];
 
     try {
-        // Actualizar la información del profesor en la tabla 'usuarios'
-        $stmt = $pdo->prepare("UPDATE usuarios 
-                               SET nombre = :nombre, correo = :correo 
-                               WHERE usuario_id = (SELECT usuario_id FROM profesores WHERE profesor_id = :profesor_id)");
+        // Actualizar los datos del profesor
+        $stmt = $pdo->prepare("UPDATE profesores p 
+                               JOIN usuarios u ON p.usuario_id = u.usuario_id 
+                               SET u.nombre = :nombre, u.correo = :correo, 
+                                   p.especialidad = :especialidad, p.telefono = :telefono 
+                               WHERE p.profesor_id = :profesor_id");
         $stmt->execute([
             ':nombre' => $nombre,
             ':correo' => $correo,
-            ':profesor_id' => $profesor_id
-        ]);
-
-        // Actualizar la información del profesor en la tabla 'profesores'
-        $stmt = $pdo->prepare("UPDATE profesores 
-                               SET especialidad = :especialidad, telefono = :telefono 
-                               WHERE profesor_id = :profesor_id");
-        $stmt->execute([
             ':especialidad' => $especialidad,
             ':telefono' => $telefono,
             ':profesor_id' => $profesor_id
         ]);
 
-        $mensaje = "Profesor actualizado exitosamente.";
+        // Redirigir con un mensaje de éxito
+        header("Location: consultar_profesores.php?mensaje=Profesor actualizado correctamente");
+        exit;
     } catch (PDOException $e) {
-        $error = "Error al actualizar el profesor: " . $e->getMessage();
+        $error = "Error al actualizar los datos del profesor: " . $e->getMessage();
     }
 }
 ?>
@@ -86,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <span>Gestión de Usuarios</span>
         </div>
         <div class="navbar-right">
-            <span>Bienvenido, <?php echo htmlspecialchars($nombre_director); ?></span>
+            <span>Bienvenido, <?php echo htmlspecialchars($_SESSION['nombre']); ?></span>
             <a href="../logout.php" class="logout-button">Cerrar Sesión</a>
         </div>
     </header>
@@ -103,8 +100,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="alert alert-danger"><?php echo $error; ?></div>
         <?php endif; ?>
 
-        <!-- Formulario para editar el profesor -->
-        <form method="POST" action="editar_profesor.php?id=<?php echo $profesor_id; ?>">
+        <!-- Control de navegación -->
+        <div class="button-container">
+            <a href="dashboard_director.php" class="control-button">
+                <i class="bi bi-house-door"></i>
+                <span>Panel principal</span>
+            </a>   
+            <a href="gestion_usuarios.php" class="control-button">
+                <i class="bi bi-person-plus"></i>
+                <span>Agregar Profesor</span>
+            </a>
+            <a href="consultar_profesores.php" class="control-button">
+                <i class="bi bi-people"></i>
+                <span>Consultar Profesores del Nivel</span>
+            </a>
+            <a href="editar_profesor.php" class="control-button">
+                <i class="bi bi-pencil-square"></i>
+                <span>Editar Profesor</span>
+            </a>
+        </div>
+
+        <!-- Formulario de edición -->
+        <form method="POST" class="form-editar-profesor">
             <div class="form-group">
                 <label for="nombre">Nombre:</label>
                 <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($profesor['nombre']); ?>" required>
@@ -121,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="telefono">Teléfono:</label>
                 <input type="text" id="telefono" name="telefono" value="<?php echo htmlspecialchars($profesor['telefono']); ?>" required>
             </div>
-            <button type="submit" class="btn">Guardar Cambios</button>
+            <button type="submit" class="btn-guardar">Guardar Cambios</button>
         </form>
     </main>
 
