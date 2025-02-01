@@ -9,6 +9,7 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
 
 require_once '../db.php';
 
+<<<<<<< HEAD
 // Obtener parámetros de filtrado
 $filtro_nivel = $_GET['nivel'] ?? '';
 $filtro_grado = $_GET['grado'] ?? '';
@@ -16,10 +17,15 @@ $filtro_turno = $_GET['turno'] ?? '';
 
 try {
     // Consulta base para obtener grupos
+=======
+try {
+    // Obtener lista de grupos con sus niveles de la base de datos
+>>>>>>> da46b6c9ee917a6dcce0ae856323ab1f6cb78ccc
     $sql = "
         SELECT g.id_grupo, n.nivel_nombre, g.grado, g.turno 
         FROM grupos g
         JOIN niveles n ON g.nivel_id = n.nivel_id
+<<<<<<< HEAD
         WHERE 1=1
     ";
 
@@ -87,6 +93,11 @@ try {
             $turnos = $stmt_turnos->fetchAll(PDO::FETCH_COLUMN);
         }
     }
+=======
+    ";
+    $stmt = $pdo->query($sql);
+    $grupos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+>>>>>>> da46b6c9ee917a6dcce0ae856323ab1f6cb78ccc
 } catch (PDOException $e) {
     die("Error al obtener los grupos: " . $e->getMessage());
 }
@@ -107,7 +118,11 @@ try {
             <h1>Gestión de Grupos</h1>
             <div class="navbar-right">
                 <span>Administrador: <?php echo htmlspecialchars($_SESSION['nombre']); ?></span>
+<<<<<<< HEAD
                 <a href="../logout.php" class="logout-button">Cerrar Sesión</a>
+=======
+                <a href="logout.php" class="logout-button">Cerrar Sesión</a>
+>>>>>>> da46b6c9ee917a6dcce0ae856323ab1f6cb78ccc
             </div>
         </div>
     </header>
@@ -129,6 +144,7 @@ try {
 
     <!-- Contenido Principal -->
     <main class="main-container">
+<<<<<<< HEAD
         <!-- Formulario de filtrado -->
         <form method="GET" action="gestionar_grupos.php" class="filter-form">
             <div class="filter-group">
@@ -174,6 +190,8 @@ try {
         </form>
 
         <!-- Tabla de grupos -->
+=======
+>>>>>>> da46b6c9ee917a6dcce0ae856323ab1f6cb78ccc
         <table>
             <thead>
                 <tr>
@@ -210,6 +228,7 @@ try {
             </tbody>
         </table>
     </main>
+<<<<<<< HEAD
 
     <!-- Script para manejar la dinámica de los filtros -->
     <script>
@@ -266,3 +285,7 @@ try {
     </script>
 </body>
 </html>
+=======
+</body>
+</html>
+>>>>>>> da46b6c9ee917a6dcce0ae856323ab1f6cb78ccc

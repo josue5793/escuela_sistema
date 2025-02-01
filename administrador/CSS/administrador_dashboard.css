@@ -173,6 +173,7 @@ body {
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     }
 }
+<<<<<<< HEAD
 
 /* Estilos para los botones de control */
 .control-button {
@@ -206,3 +207,5 @@ body {
 .control-button span {
     font-size: 1rem;
 }
+=======
+>>>>>>> da46b6c9ee917a6dcce0ae856323ab1f6cb78ccc

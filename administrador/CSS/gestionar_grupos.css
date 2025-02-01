@@ -183,6 +183,7 @@ table tr:hover {
         overflow-x: auto;
         white-space: nowrap;
     }
+<<<<<<< HEAD
 }
 /* Formulario de filtrado */
 .filter-form {
@@ -249,4 +250,6 @@ table tr:hover {
     .filter-button {
         width: 100%;
     }
+=======
+>>>>>>> da46b6c9ee917a6dcce0ae856323ab1f6cb78ccc
 }

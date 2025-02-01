@@ -24,7 +24,11 @@ if (!isset($_SESSION['usuario_id']) || !in_array($_SESSION['rol'], ['administrad
             <h1>Gestión de Alumnos</h1>
             <div class="navbar-right">
                 <span>Bienvenid@: <?php echo htmlspecialchars($_SESSION['nombre']); ?></span>
+<<<<<<< HEAD
                 <a href="../logout.php" class="logout-button">Cerrar Sesión</a>
+=======
+                <a href="logout.php" class="logout-button">Cerrar Sesión</a>
+>>>>>>> da46b6c9ee917a6dcce0ae856323ab1f6cb78ccc
             </div>
         </div>
     </header>
