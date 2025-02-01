@@ -1,0 +1,169 @@
+/* Estilo General */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e8f4fc; /* Fondo general */
+    color: #003f7f; /* Azul oscuro para el texto */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+    overflow: hidden; /* Evita scroll innecesario */
+}
+
+/* Contenedor Principal */
+.container {
+    max-width: 90%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Logo Header */
+.logo-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; /* Espacio entre el logo y el texto */
+    margin-top: 100px; /* Espacio superior para evitar superposición */
+}
+
+/* Estilo para el logo cuadrado con bordes redondeados */
+.logo {
+    width: 25vmin; /* Tamaño del logo */
+    height: 25vmin;
+    border-radius: 10%; /* Bordes redondeados */
+    border: 5px solid #00aaff; /* Azul brillante */
+    object-fit: cover; /* Ajusta bien la imagen */
+    margin: 0 auto;
+    display: block;
+}
+
+/* Animación del logo */
+.animated-logo {
+    animation: logo-animation 2s ease forwards;
+}
+
+@keyframes logo-animation {
+    0% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Texto del Sistema de Control Escolar */
+.logo-header h1 {
+    margin-top: 20px;
+    font-size: 2.5rem;
+    color: #003f7f; /* Azul oscuro */
+}
+
+.logo-header p {
+    font-size: 1.2rem;
+    color: #555555; /* Gris oscuro */
+}
+
+/* Enlaces */
+.links-section {
+    display: flex;
+    justify-content: center;
+    gap: 5%;
+    margin: 20px 0;
+    flex-wrap: wrap; /* Ajusta los enlaces en pantallas pequeñas */
+}
+
+.link-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #003f7f; /* Azul oscuro */
+    font-size: 1rem;
+    transition: color 0.3s, transform 0.3s;
+    flex: 1 1 30%; /* Ocupa espacio flexible */
+    max-width: 150px;
+}
+
+.link-item i {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #00aaff; /* Azul brillante */
+}
+
+.link-item:hover {
+    color: #00aaff; /* Azul brillante */
+    transform: scale(1.1); /* Efecto de zoom */
+}
+
+/* Información */
+.info-section {
+    background: #ffffff; /* Fondo blanco para contraste */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    color: #003f7f; /* Azul oscuro */
+}
+
+.info-section h2 {
+    color: #003f7f; /* Azul oscuro */
+}
+
+.info-section p {
+    color: #555555; /* Gris oscuro */
+}
+
+/* Pie de página */
+footer {
+    margin-top: 30px;
+    font-size: 0.8rem;
+    color: #777777; /* Gris neutro */
+    text-align: center;
+}
+
+footer a {
+    color: #00aaff; /* Azul brillante */
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Estilo Responsivo */
+@media (max-width: 768px) {
+    .logo {
+        width: 30vmin;
+        height: 30vmin;
+    }
+
+    .logo-header h1 {
+        font-size: 2rem;
+    }
+
+    .links-section {
+        gap: 15px;
+    }
+
+    .link-item {
+        font-size: 0.9rem;
+    }
+
+    .info-section {
+        font-size: 0.9rem;
+        padding: 15px;
+    }
+
+    footer {
+        font-size: 0.7rem;
+    }
+}
