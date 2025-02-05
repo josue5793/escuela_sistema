@@ -68,14 +68,15 @@ try {
                 <i class="bi bi-person-plus"></i>
                 <span>Agregar Profesor</span>
             </a>
+            <a href="asignar_profesor.php" class="control-button">
+                <i class="bi bi-book"></i>
+                <span>Asignar profesor a materias</span>
+            </a>
             <a href="consultar_profesores.php" class="control-button">
                 <i class="bi bi-people"></i>
                 <span>Consultar Profesores</span>
             </a>
-            <a href="editar_profesor.php" class="control-button">
-                <i class="bi bi-pencil-square"></i>
-                <span>Editar Profesor</span>
-            </a>
+
         </div>
 
         <!-- Tabla de profesores -->

@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Cuerpo del documento -->
     <main class="main-container">
-        <h1>Registrar Nuevo Profesor</h1>
+        <h1>Gestión de profesores</h1>
 
         <!-- Mostrar mensajes de éxito o error -->
         <?php if (isset($mensaje)): ?>
@@ -120,10 +120,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <i class="bi bi-people"></i>
                 <span>Consultar Profesores del Nivel</span>
             </a>
-            <a href="editar_profesor.php" class="control-button">
-                <i class="bi bi-pencil-square"></i>
-                <span>Editar Profesor</span>
+            <a href="asignar_profesor.php" class="control-button">
+                <i class="bi bi-book"></i>
+                <span>Asignar profesor a materias</span>
             </a>
+            
         </div>
 
         <!-- Formulario para registrar un nuevo profesor -->

@@ -1,0 +1,216 @@
+/* Estilos generales */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+}
+
+/* Barra superior */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-left span {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.navbar-right span {
+    font-size: 1rem;
+}
+
+.logout-button {
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: #c0392b;
+}
+
+/* Cuerpo del documento */
+.main-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+.welcome-section {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.welcome-section h1 {
+    font-size: 2.5rem;
+    color: #2980b9;
+}
+
+.welcome-section p {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+/* Botones de opciones */
+.button-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem; /* Espacio debajo de los botones */
+}
+
+.control-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #3498db;
+    color: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.control-button i {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.control-button span {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.control-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-5px);
+}
+
+/* Contenedor principal del formulario y la tabla */
+.container {
+    max-width: 900px; /* Ajusta el ancho máximo según tus necesidades */
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos del formulario */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group button[type="submit"] {
+    background-color: #27ae60;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-group button[type="submit"]:hover {
+    background-color: #219653;
+}
+
+/* Estilos de la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.acciones {
+    display: flex;
+    gap: 5px; /* Espacio entre los enlaces */
+}
+
+.acciones a {
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #3498db; /* Color azul para los enlaces */
+}
+
+.acciones a:hover {
+    text-decoration: underline;
+}
+
+/* Estilos de los mensajes */
+.mensaje {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.exito {
+    background-color: #2ecc71; /* Verde para éxito */
+    color: #fff;
+}
+
+.error {
+    background-color: #e74c3c; /* Rojo para error */
+    color: #fff;
+}
+
+/* Pie de página */
+.footer {
+    text-align: center;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 1rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer span {
+    font-size: 1rem;
+}

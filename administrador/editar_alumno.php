@@ -43,20 +43,20 @@ try {
 
 // Manejar la actualización del alumno
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Recuperar datos del formulario
-    $nombres = $_POST['nombres'];
-    $apellidos = $_POST['apellidos'];
-    $direccion = $_POST['direccion'];
-    $telefono = $_POST['telefono'];
-    $fecha_nacimiento = $_POST['fecha_nacimiento'];
-    $nivel_id = $_POST['nivel_id'];
-    $grupo_id = $_POST['grupo_id'];
+    // Recuperar datos del formulario y permitir NULL en campos opcionales
+    $nombres = !empty($_POST['nombres']) ? $_POST['nombres'] : null;
+    $apellidos = !empty($_POST['apellidos']) ? $_POST['apellidos'] : null;
+    $direccion = !empty($_POST['direccion']) ? $_POST['direccion'] : null;
+    $telefono = !empty($_POST['telefono']) ? $_POST['telefono'] : null;
+    $fecha_nacimiento = !empty($_POST['fecha_nacimiento']) ? $_POST['fecha_nacimiento'] : null;
+    $nivel_id = !empty($_POST['nivel_id']) ? $_POST['nivel_id'] : null;
+    $grupo_id = !empty($_POST['grupo_id']) ? $_POST['grupo_id'] : null;
 
     // Validaciones
     $error = null;
-    if (empty($nombres) || empty($apellidos) || empty($nivel_id) || empty($grupo_id)) {
-        $error = "Todos los campos obligatorios deben ser completados.";
-    } elseif (!preg_match('/^[0-9]{10}$/', $telefono)) {
+    if (!$nombres || !$apellidos) {
+        $error = "Los campos de nombres y apellidos son obligatorios.";
+    } elseif ($telefono && !preg_match('/^[0-9]{10}$/', $telefono)) {
         $error = "El teléfono debe contener 10 dígitos.";
     }
 
@@ -92,7 +92,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Actualizar los datos del alumno en la base de datos
     if (!$error) {
         try {
-            $query = "UPDATE alumnos SET nombres = :nombres, apellidos = :apellidos, direccion = :direccion, telefono = :telefono, fecha_nacimiento = :fecha_nacimiento, nivel_id = :nivel_id, grupo_id = :grupo_id, foto = :foto WHERE alumno_id = :alumno_id";
+            $query = "UPDATE alumnos SET 
+                nombres = :nombres, 
+                apellidos = :apellidos, 
+                direccion = :direccion, 
+                telefono = :telefono, 
+                fecha_nacimiento = :fecha_nacimiento, 
+                nivel_id = :nivel_id, 
+                grupo_id = :grupo_id, 
+                foto = :foto 
+                WHERE alumno_id = :alumno_id";
+
             $stmt = $pdo->prepare($query);
             $stmt->execute([
                 'nombres' => $nombres,
@@ -122,25 +132,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Alumno</title>
-    <link rel="stylesheet" href="CSS/editar_alumno.css">
+    <link rel="stylesheet" href="CSS/editar_alumno2.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
 </head>
 <body>
-    <header class="navbar">
-        <div class="navbar-container">
-            <h1>Editar Alumno</h1>
-            <div class="navbar-right">
-                <span>Administrador: <?php echo htmlspecialchars($_SESSION['nombre']); ?></span>
-                <a href="../logout.php" class="logout-button">Cerrar Sesión</a>
-            </div>
+<header class="navbar">
+    <div class="navbar-container">
+        <h1>Esditar la informacion del alumno</h1>
+        <div class="navbar-right">
+            <span>Bienvenid@: <?php echo htmlspecialchars($_SESSION['nombre']); ?></span>
+            <a href="../logout.php" class="logout-button">Cerrar Sesión</a>
         </div>
-    
-    </header>
+    </div>
 
-    <main class="main-container">
 
-    <div class="button-container">
+</header> 
+
+     <!-- Botones de control -->
+     <div class="button-container">
         <a href="agregar_alumno.php" class="control-button">
             <i class="bi bi-person"></i>
             <span>Agregar Alumno</span>
@@ -153,56 +162,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <i class="bi bi-house-door"></i>
             <span>Panel Administrador</span>
         </a>
-        
     </div>
-        <h2>Actualizar información del alumno</h2>
-        <?php if (isset($error)): ?>
-            <p class="error-message"><?php echo htmlspecialchars($error); ?></p>
+
+    <?php if (isset($error)): ?>
+        <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
+    <?php endif; ?>
+
+    <form method="POST" enctype="multipart/form-data">
+        <label for="nombres">Nombres:</label>
+        <input type="text" id="nombres" name="nombres" value="<?php echo htmlspecialchars($alumno['nombres']); ?>" required>
+
+        <label for="apellidos">Apellidos:</label>
+        <input type="text" id="apellidos" name="apellidos" value="<?php echo htmlspecialchars($alumno['apellidos']); ?>" required>
+
+        <label for="direccion">Dirección:</label>
+        <input type="text" id="direccion" name="direccion" value="<?php echo htmlspecialchars($alumno['direccion'] ?? ''); ?>">
+
+        <label for="telefono">Teléfono:</label>
+        <input type="text" id="telefono" name="telefono" value="<?php echo htmlspecialchars($alumno['telefono'] ?? ''); ?>">
+
+        <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+        <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="<?php echo htmlspecialchars($alumno['fecha_nacimiento'] ?? ''); ?>">
+
+        <label for="foto">Foto:</label>
+        <input type="file" id="foto" name="foto" accept="image/*">
+        <?php if (!empty($alumno['foto'])): ?>
+            <img src="../uploads/<?php echo htmlspecialchars($alumno['foto']); ?>" alt="Foto del alumno" width="100">
         <?php endif; ?>
 
-        <form method="POST" enctype="multipart/form-data">
-            <label for="nombres">Nombres:</label>
-            <input type="text" id="nombres" name="nombres" value="<?php echo htmlspecialchars($alumno['nombres']); ?>" required>
-
-            <label for="apellidos">Apellidos:</label>
-            <input type="text" id="apellidos" name="apellidos" value="<?php echo htmlspecialchars($alumno['apellidos']); ?>" required>
-
-            <label for="direccion">Dirección:</label>
-            <input type="text" id="direccion" name="direccion" value="<?php echo htmlspecialchars($alumno['direccion']); ?>">
-
-            <label for="telefono">Teléfono:</label>
-            <input type="text" id="telefono" name="telefono" value="<?php echo htmlspecialchars($alumno['telefono']); ?>">
-
-            <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-            <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="<?php echo htmlspecialchars($alumno['fecha_nacimiento']); ?>">
-
-            <label for="nivel_id">Nivel:</label>
-            <select name="nivel_id" id="nivel_id" required>
-                <?php foreach ($niveles as $nivel): ?>
-                    <option value="<?php echo $nivel['nivel_id']; ?>" <?php echo $nivel['nivel_id'] == $alumno['nivel_id'] ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($nivel['nivel_nombre']); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-
-            <label for="grupo_id">Grupo:</label>
-            <select name="grupo_id" id="grupo_id" required>
-                <?php foreach ($grupos as $grupo): ?>
-                    <option value="<?php echo $grupo['id_grupo']; ?>" <?php echo $grupo['id_grupo'] == $alumno['grupo_id'] ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($grupo['grado'] . ' ' . $grupo['turno']); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-
-            <label for="foto">Foto (opcional):</label>
-            <input type="file" id="foto" name="foto" accept="image/*">
-            <?php if (!empty($alumno['foto'])): ?>
-                <p>Foto actual:</p>
-                <img src="../uploads/<?php echo htmlspecialchars($alumno['foto']); ?>" alt="Foto del alumno" width="100">
-            <?php endif; ?>
-
-            <button type="submit">Actualizar</button>
-        </form>
-    </main>
+        <button type="submit">Actualizar</button>
+    </form>
 </body>
 </html>

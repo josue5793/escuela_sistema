@@ -2,46 +2,48 @@
 session_start();
 require_once '../db.php';
 
-// Verificar si el usuario está logueado
-if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'administrador') {
+// Verificar si el usuario está logueado y es director
+if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'director') {
     header("Location: login.php");
     exit;
 }
 
+$usuarioId = $_SESSION['usuario_id'];
+
+// Consultar el nivel del director en la base de datos
+$stmt = $pdo->prepare("SELECT nivel_id FROM directores WHERE usuario_id = ?");
+$stmt->execute([$usuarioId]);
+$director = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($director && $director['nivel_id']) {
+    $nivelDirector = $director['nivel_id'];
+} else {
+    die("Error: No se pudo determinar el nivel del director.");
+}
+
 // Variables para filtros (inicializadas con valores predeterminados)
-$nivelSeleccionado = $_GET['nivel'] ?? ''; // Valor predeterminado: cadena vacía
 $grupoSeleccionado = $_GET['grupo'] ?? ''; // Valor predeterminado: cadena vacía
 $mostrarTodos = isset($_GET['mostrar_todos']);
 $busqueda = $_GET['busqueda'] ?? '';  // Nueva variable para la búsqueda
 $result = [];
 
 try {
-    // Obtener niveles
-    $niveles = $pdo->query("SELECT * FROM niveles")->fetchAll(PDO::FETCH_ASSOC);
-
-    // Si se ha seleccionado un nivel, obtener los grupos correspondientes
-    $grupos = [];
-    if ($nivelSeleccionado) {
-        $stmtGrupos = $pdo->prepare("SELECT * FROM grupos WHERE nivel_id = ?");
-        $stmtGrupos->execute([$nivelSeleccionado]);
-        $grupos = $stmtGrupos->fetchAll(PDO::FETCH_ASSOC);
-    }
+    // Obtener los grupos correspondientes al nivel del director
+    $stmtGrupos = $pdo->prepare("SELECT * FROM grupos WHERE nivel_id = ?");
+    $stmtGrupos->execute([$nivelDirector]);
+    $grupos = $stmtGrupos->fetchAll(PDO::FETCH_ASSOC);
 
     // Consultar registros si se solicitan
-    if ($nivelSeleccionado || $grupoSeleccionado || $mostrarTodos || $busqueda) {
+    if ($grupoSeleccionado || $mostrarTodos || $busqueda) {
         // Consulta base
         $query = "SELECT a.*, n.nivel_nombre, CONCAT(g.grado, ' ', g.turno) AS grupo 
                   FROM alumnos a
                   LEFT JOIN niveles n ON a.nivel_id = n.nivel_id
-                  LEFT JOIN grupos g ON a.grupo_id = g.id_grupo";
+                  LEFT JOIN grupos g ON a.grupo_id = g.id_grupo
+                  WHERE a.nivel_id = ?"; // Solo alumnos del nivel del director
 
         $filters = [];
-        $params = [];
-
-        if ($nivelSeleccionado) {
-            $filters[] = "a.nivel_id = ?";
-            $params[] = $nivelSeleccionado;
-        }
+        $params = [$nivelDirector]; // Añadir el nivel del director como primer parámetro
 
         if ($grupoSeleccionado) {
             $filters[] = "a.grupo_id = ?";
@@ -55,10 +57,10 @@ try {
         }
 
         if ($filters) {
-            $query .= " WHERE " . implode(' AND ', $filters);
+            $query .= " AND " . implode(' AND ', $filters);
         }
 
-        $query .= " ORDER BY n.nivel_nombre, g.grado, g.turno, a.apellidos";
+        $query .= " ORDER BY g.grado, g.turno, a.apellidos";
 
         $stmt = $pdo->prepare($query);
         $stmt->execute($params);
@@ -76,7 +78,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consultar Alumnos</title>
-    <link rel="stylesheet" href="CSS/consultar_alumnos2.css">
+    <link rel="stylesheet" href="CSS/gestion_alumnos.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
@@ -97,17 +99,13 @@ try {
             <i class="bi bi-person"></i>
             <span>Agregar Alumno</span>
         </a>
-        <a href="importar_excel.php" class="control-button">
-            <i class="bi bi-file-earmark-excel"></i>
-            <span>Importar alumnos desde excel</span>
-        </a>
         <a href="consultar_alumnos.php" class="control-button">
             <i class="bi bi-person-badge"></i>
             <span>Consultar Alumnos</span>
         </a>
-        <a href="administrador_dashboard.php" class="control-button">
+        <a href="dashboard_director.php" class="control-button">
             <i class="bi bi-house-door"></i>
-            <span>Panel Administrador</span>
+            <span>Panel del director</span>
         </a>
         <a href="promover_alumnos.php" class="control-button">
             <i class="bi bi-arrow-up-circle"></i>
@@ -116,29 +114,17 @@ try {
     </div>
 
     <section class="filter-section">
-        <h2>Filtrar por Nivel y Grupo</h2>
+        <h2>Filtrar por Grupo</h2>
         <form method="GET" action="">
-            <label for="nivel">Nivel:</label>
-            <select name="nivel" id="nivel" onchange="this.form.submit()">
-                <option value="">Seleccione un nivel</option>
-                <?php foreach ($niveles as $nivel): ?>
-                    <option value="<?php echo $nivel['nivel_id']; ?>" <?php echo $nivelSeleccionado == $nivel['nivel_id'] ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($nivel['nivel_nombre']); ?>
+            <label for="grupo">Grupo:</label>
+            <select name="grupo" id="grupo" onchange="this.form.submit()">
+                <option value="">Todos los grupos</option>
+                <?php foreach ($grupos as $grupo): ?>
+                    <option value="<?php echo $grupo['id_grupo']; ?>" <?php echo $grupoSeleccionado == $grupo['id_grupo'] ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($grupo['grado'] . ' ' . $grupo['turno']); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
-
-            <?php if ($nivelSeleccionado): ?>
-                <label for="grupo">Grupo:</label>
-                <select name="grupo" id="grupo" onchange="this.form.submit()">
-                    <option value="">Todos los grupos</option>
-                    <?php foreach ($grupos as $grupo): ?>
-                        <option value="<?php echo $grupo['id_grupo']; ?>" <?php echo $grupoSeleccionado == $grupo['id_grupo'] ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($grupo['grado'] . ' ' . $grupo['turno']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            <?php endif; ?>
 
             <button type="submit" name="mostrar_todos" value="1">Mostrar Todos</button>
         </form>
@@ -153,53 +139,7 @@ try {
         </form>
     </section>
 
-    <?php if ($mostrarTodos): ?>
-        <?php
-        // Agrupar resultados por nivel y grupo
-        $clasificados = [];
-        foreach ($result as $row) {
-            $clasificados[$row['nivel_nombre']][$row['grupo']][] = $row;
-        }
-        ?>
-        
-        <?php foreach ($clasificados as $nivel => $grupos): ?>
-            <h2>Nivel: <?php echo htmlspecialchars($nivel); ?></h2>
-            <?php foreach ($grupos as $grupo => $alumnos): ?>
-                <h3>Grupo: <?php echo htmlspecialchars($grupo); ?></h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Foto</th>
-                            <th>Matrícula</th>
-                            <th>Apellidos</th>
-                            <th>Nombres</th>
-                            <th>Dirección</th>
-                            <th>Teléfono</th>
-                            <th>Fecha de Nacimiento</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($alumnos as $alumno): ?>
-                            <tr data-alumno='<?php echo htmlspecialchars(json_encode($alumno)); ?>'>
-                                <td><img src="../uploads/<?php echo htmlspecialchars($alumno['foto']); ?>" alt="Foto del Alumno" width="50"></td>
-                                <td><?php echo htmlspecialchars($alumno['matricula']); ?></td>
-                                <td><?php echo htmlspecialchars($alumno['apellidos']); ?></td>
-                                <td><?php echo htmlspecialchars($alumno['nombres']); ?></td>
-                                <td><?php echo htmlspecialchars($alumno['direccion']); ?></td>
-                                <td><?php echo htmlspecialchars($alumno['telefono']); ?></td>
-                                <td><?php echo htmlspecialchars($alumno['fecha_nacimiento']); ?></td>
-                                <td>
-                                    <a href="editar_alumno.php?id=<?php echo $alumno['alumno_id']; ?>" class="action-button">Editar</a>
-                                    <a href="eliminar_alumno.php?id=<?php echo $alumno['alumno_id']; ?>" class="action-button" onclick="return confirm('¿Estás seguro de eliminar a este alumno?')">Eliminar</a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php endforeach; ?>
-        <?php endforeach; ?>
-    <?php elseif (!empty($result)): ?>
+    <?php if (!empty($result)): ?>
         <table>
             <thead>
                 <tr>
@@ -219,8 +159,8 @@ try {
                         <td><?php echo htmlspecialchars($row['matricula']); ?></td>
                         <td><?php echo htmlspecialchars($row['apellidos']); ?></td>
                         <td><?php echo htmlspecialchars($row['nombres']); ?></td>
-                        <td><?php echo htmlspecialchars($row['grupo']); ?></td>
-                        <td><?php echo htmlspecialchars($row['nivel_nombre']); ?></td>
+                        <td><?php echo htmlspecialchars($row['grupo']); ?></td> <!-- Nombre del grupo -->
+                        <td><?php echo htmlspecialchars($row['nivel_nombre']); ?></td> <!-- Nombre del nivel -->
                         <td>
                             <a href="editar_alumno.php?id=<?php echo $row['alumno_id']; ?>" class="action-button">Editar</a>
                             <a href="eliminar_alumno.php?id=<?php echo $row['alumno_id']; ?>" class="action-button" onclick="return confirm('¿Estás seguro de eliminar este alumno?')">Eliminar</a>

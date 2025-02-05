@@ -49,6 +49,11 @@ require_once '../db.php';
                 <i class="bi bi-people"></i>
                 <span>Administrar y gestionar profesores</span>
             </a>
+            
+            <a href="registro_materias.php" class="control-button">
+                <i class="bi bi-backpack3"></i>
+                <span>Registro de Materias</span>
+            </a>
             <a href="gestion_grupos.php" class="control-button">
                 <i class="bi bi-collection"></i>
                 <span>Gestionar Grupos</span>
@@ -57,11 +62,11 @@ require_once '../db.php';
                 <i class="bi bi-mortarboard"></i>
                 <span>Gestionar Alumnos</span>
             </a>
-
-            <a href="registro_materias.php" class="control-button">
-                <i class="bi bi-book"></i>
-                <span>Registro de Materias</span>
+            <a href="consulta_calificaciones.php" class="control-button">
+                <i class="bi bi-clipboard-check"></i>
+                <span>Consultar Calificaciones</span>
             </a>
+
             <a href="generar_reportes.php" class="control-button">
                 <i class="bi bi-bar-chart"></i>
                 <span>Generar Reportes</span>

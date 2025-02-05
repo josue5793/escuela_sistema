@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Definir el nombre del archivo
         $foto = $_FILES['foto']['name'];
         $fotoTmpPath = $_FILES['foto']['tmp_name'];
-        $uploadDir = 'uploads/';
+        $uploadDir = '../uploads/';
 
         // Verificar que el archivo sea una imagen
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
